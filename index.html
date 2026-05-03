@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HINE — Hammersmith Infant Neurological Examination</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#f0efe9;
+  --text:#1a1a18;--text2:#5f5e5a;--text3:#888780;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --radius:8px;--radius-lg:12px;
+  --green-bg:#EAF3DE;--green-bd:#639922;--green-text:#27500A;
+  --amber-bg:#FAEEDA;--amber-bd:#BA7517;--amber-text:#633806;
+  --orange-bg:#FAECE7;--orange-bd:#993C1D;--orange-text:#4A1B0C;
+  --red-bg:#FCEBEB;--red-bd:#A32D2D;--red-text:#501313;
+  --info-bg:#E6F1FB;--info-text:#0C447C;--info-bd:#185FA5;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#242422;--bg3:#2c2c2a;
+  --text:#f0efe9;--text2:#b4b2a9;--text3:#888780;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.20);
+  --green-bg:#173404;--green-bd:#639922;--green-text:#C0DD97;
+  --amber-bg:#412402;--amber-bd:#BA7517;--amber-text:#FAC775;
+  --orange-bg:#4A1B0C;--orange-bd:#993C1D;--orange-text:#F0997B;
+  --red-bg:#501313;--red-bd:#A32D2D;--red-text:#F7C1C1;
+  --info-bg:#042C53;--info-text:#B5D4F4;--info-bd:#378ADD;
+}}
+body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:100vh;padding:2rem 1rem;font-size:15px;line-height:1.5}
+.container{max-width:760px;margin:0 auto}
+.app-header{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.25rem}
+.app-header h1{font-size:20px;font-weight:600}
+.app-header p{font-size:13px;color:var(--text2);margin-top:4px}
+.pt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.75rem;margin-bottom:1.25rem}
+.pt-grid label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
+.pt-grid input,.pt-grid select{width:100%;font-size:13px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:var(--font)}
+.pt-grid input:focus,.pt-grid select:focus{outline:2px solid var(--info-bd);outline-offset:1px}
+.nav-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.npill{font-size:12px;padding:6px 14px;border-radius:20px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;user-select:none;transition:all 0.15s}
+.npill:hover{background:var(--bg2)}
+.npill.active{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-left:5px;vertical-align:middle}
+.dot-r{background:#E24B4A}.dot-g{background:#639922}
+.tab{display:none}.tab.vis{display:block}
+.scard{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.75rem;margin-bottom:1rem}
+.stitle{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center}
+.sscore{font-size:13px;font-weight:500;background:var(--bg2);border-radius:var(--radius);padding:3px 10px;color:var(--text)}
+.irow{border-top:0.5px solid var(--border);padding:11px 0}
+.irow:first-of-type{border-top:none}
+.ilabel{font-size:14px;color:var(--text);margin-bottom:4px;font-weight:500}
+.isub{font-size:12px;color:var(--text2);margin-bottom:8px}
+/* Guidance toggle */
+.guidance-toggle{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--info-text);background:var(--info-bg);border:0.5px solid var(--info-bd);border-radius:4px;padding:2px 8px;cursor:pointer;margin-bottom:8px;user-select:none}
+.guidance-toggle:hover{opacity:.85}
+.guidance-box{display:none;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--text2);line-height:1.65}
+.guidance-box.open{display:block}
+.guidance-box strong{color:var(--text);font-weight:500}
+.guidance-box .score-line{display:flex;gap:6px;margin-top:5px;align-items:baseline;font-size:11px}
+.guidance-box .score-line .sc{font-weight:600;min-width:48px;color:var(--text)}
+/* Score buttons */
+.sopts{display:flex;gap:6px;flex-wrap:wrap}
+.sbtn{border:0.5px solid var(--border2);border-radius:var(--radius);padding:5px 14px;font-size:12px;cursor:pointer;background:var(--bg2);color:var(--text);transition:all 0.15s;font-family:var(--font)}
+.sbtn:hover{background:var(--bg3)}
+.sbtn.a3{background:var(--green-bg);border-color:var(--green-bd);color:var(--green-text)}
+.sbtn.a2{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber-text)}
+.sbtn.a1{background:var(--orange-bg);border-color:var(--orange-bd);color:var(--orange-text)}
+.sbtn.a0{background:var(--red-bg);border-color:var(--red-bd);color:var(--red-text)}
+/* Asymmetry */
+.arow{margin-top:8px;display:flex;align-items:center;gap:8px}
+.arow label{font-size:12px;color:var(--text2);cursor:pointer}
+.arow input[type=checkbox]{cursor:pointer;width:14px;height:14px}
+/* Half-score helper */
+.half-row{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.half-row label{font-size:12px;color:var(--text2)}
+.half-row input[type=number]{width:64px;font-size:12px;padding:4px 7px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:var(--font)}
+.note{font-size:12px;color:var(--text3);font-style:italic;padding:6px 0 10px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mi{border:0.5px solid var(--border);border-radius:var(--radius);padding:10px}
+.mi label{font-size:12px;font-weight:500;color:var(--text);display:block;margin-bottom:5px}
+.mi select{width:100%;font-size:12px;padding:5px 7px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2);color:var(--text);font-family:var(--font)}
+.bb{border-top:0.5px solid var(--border);padding:10px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bb label{font-size:13px;color:var(--text);min-width:130px}
+.bbtns{display:flex;gap:5px;flex-wrap:wrap}
+.bbtn{border:0.5px solid var(--border2);border-radius:var(--radius);padding:4px 11px;font-size:12px;cursor:pointer;background:var(--bg2);color:var(--text2);font-family:var(--font)}
+.bbtn.act{background:var(--info-bg);border-color:var(--info-bd);color:var(--info-text)}
+/* Summary */
+.sum-wrap{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.75rem;margin-bottom:1rem}
+.sum-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--border)}
+.gs-row{background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.gs-lbl{font-size:14px;font-weight:500;color:var(--text2)}
+.gs-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.gs-val{font-size:32px;font-weight:600;color:var(--text)}
+.gs-max{font-size:15px;color:var(--text3)}
+.pbar{height:8px;border-radius:4px;background:var(--bg3);overflow:hidden;margin-bottom:1rem;border:0.5px solid var(--border)}
+.pfill{height:100%;border-radius:4px;transition:width 0.4s ease;background:#639922}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.smet{background:var(--bg);border-radius:var(--radius);padding:.75rem 1rem;border:0.5px solid var(--border)}
+.smet .sl{font-size:11px;color:var(--text2);margin-bottom:3px}
+.smet .sv{font-size:22px;font-weight:600;color:var(--text)}
+.smet .sm{font-size:12px;color:var(--text3)}
+.sbars{margin-top:.75rem}
+.si-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:0.5px solid var(--border);font-size:13px}
+.si-row:first-child{border-top:none}
+.si-name{flex:0 0 130px;color:var(--text2);font-size:12px}
+.si-bar-wrap{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.si-bar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.si-score{font-weight:500;color:var(--text);min-width:42px;text-align:right;font-size:12px}
+.si-pct{font-size:11px;color:var(--text3);min-width:35px;text-align:right}
+.risk-card{border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem;border:1.5px solid}
+.rk-band{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.rk-title{font-size:17px;font-weight:500;margin-bottom:7px}
+.rk-desc{font-size:13px;line-height:1.65}
+.rk-action{font-size:12px;margin-top:10px;padding-top:10px;border-top:0.5px solid currentColor;opacity:.85;line-height:1.6}
+.risk-green{background:var(--green-bg);border-color:var(--green-bd);color:var(--green-text)}
+.risk-amber{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber-text)}
+.risk-red{background:var(--red-bg);border-color:var(--red-bd);color:var(--red-text)}
+.asym-card{border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:1rem;border:1.5px solid}
+.asym-sig{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber-text)}
+.asym-ok{background:var(--green-bg);border-color:var(--green-bd);color:var(--green-text)}
+.zone-bar-wrap{height:14px;border-radius:7px;background:var(--bg3);overflow:hidden;position:relative;margin:6px 0 4px;border:0.5px solid var(--border)}
+.zone-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:2px}
+.zone-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.zl-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.zl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.chart-wrap{position:relative;width:100%;height:220px;margin:8px 0 4px}
+.ref-table{width:100%;border-collapse:collapse;font-size:12px}
+.ref-table th{text-align:left;padding:6px 8px;color:var(--text2);font-weight:500;border-bottom:0.5px solid var(--border2);font-size:11px}
+.ref-table td{padding:7px 8px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:top}
+.ref-table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500}
+.bg{background:var(--green-bg);color:var(--green-text)}
+.br{background:var(--red-bg);color:var(--red-text)}
+.cmt-area{width:100%;font-size:13px;padding:10px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg2);color:var(--text);resize:vertical;min-height:80px;font-family:var(--font);line-height:1.6}
+.cmt-area:focus{outline:2px solid var(--info-bd);outline-offset:1px}
+.action-row{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.abtn{flex:1;padding:11px 16px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;font-family:var(--font);min-width:140px;transition:background 0.15s}
+.abtn:hover{background:var(--bg3)}
+.abtn.primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+.abtn.primary:hover{opacity:.85}
+.ref-note{font-size:11px;color:var(--text3);line-height:1.6;margin-top:10px;padding-top:8px;border-top:0.5px solid var(--border)}
+.scoring-guide-header{font-size:12px;font-weight:500;color:var(--text2);margin-top:6px;margin-bottom:4px}
+.footer{text-align:center;font-size:11px;color:var(--text3);margin-top:2rem;padding-top:1rem;border-top:0.5px solid var(--border)}
+.footer a{color:var(--text3)}
+@media(max-width:560px){
+  .pt-grid,.sgrid,.mg{grid-template-columns:1fr}
+  body{padding:1rem .75rem}
+  .app-header,.scard,.sum-wrap,.pt-grid{padding:1rem 1.1rem}
+}
+@media print{
+  body{background:white;padding:0;font-size:11px}
+  .container{max-width:100%}
+  .nav-pills,.action-row,.guidance-toggle{display:none!important}
+  .guidance-box{display:none!important}
+  .tab{display:block!important}
+  .scard,.sum-wrap,.app-header,.pt-grid{break-inside:avoid;box-shadow:none;border:1px solid #ccc;margin-bottom:.5rem}
+  .risk-card,.asym-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sbtn.a3,.sbtn.a2,.sbtn.a1,.sbtn.a0{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="app-header">
+  <h1>Hammersmith Infant Neurological Examination</h1>
+  <p>HINE v 20.12.23 &mdash; Scoring, guidance, risk interpretation &amp; PDF export &nbsp;|&nbsp; Hospital Miri, Department of Neonatology</p>
+</div>
+
+<div class="pt-grid">
+  <div><label>Patient name</label><input type="text" id="pt-name" placeholder="Full name"></div>
+  <div><label>Date of birth</label><input type="date" id="pt-dob"></div>
+  <div><label>Gestational age at birth</label>
+    <select id="pt-ga-cat" onchange="upd()">
+      <option value="term">Term (≥ 37 weeks)</option>
+      <option value="lp">Late preterm (33–36 weeks)</option>
+      <option value="vp">Very preterm (≤ 32 weeks)</option>
+    </select>
+  </div>
+  <div><label>Date of examination</label><input type="date" id="pt-doe"></div>
+  <div><label>Chronological age</label><input type="text" id="pt-chrono" placeholder="e.g. 3m 2w"></div>
+  <div><label>Corrected age</label>
+    <select id="pt-corrected-age" onchange="upd()">
+      <option value="">— select for interpretation —</option>
+      <option value="3">3 months</option>
+      <option value="6">6 months</option>
+      <option value="9">9 months</option>
+      <option value="12">12 months</option>
+      <option value="18">18 months</option>
+    </select>
+  </div>
+  <div><label>Head circumference (cm)</label><input type="number" id="pt-hc" placeholder="e.g. 34.5" step="0.1"></div>
+  <div><label>Examiner</label><input type="text" id="pt-examiner" placeholder="Name / designation"></div>
+  <div><label>Brain imaging (if available)</label><input type="text" id="pt-mri" placeholder="e.g. Normal MRI, IVH grade II"></div>
+  <div><label>GMA category (if available)</label>
+    <select id="pt-gma">
+      <option value="">— not done / not available —</option>
+      <option value="Normal FMs">Normal fidgety movements</option>
+      <option value="Absent FMs">Absent fidgety movements</option>
+      <option value="Normal WMs">Normal writhing movements</option>
+      <option value="Poor repertoire WMs">Poor repertoire writhing</option>
+      <option value="Cramped-synchronised">Cramped-synchronised</option>
+      <option value="Chaotic">Chaotic</option>
+    </select>
+  </div>
+</div>
+
+<div class="nav-pills">
+  <div class="npill active" onclick="sw(this,'t-cn')">Cranial nerves <span class="dot dot-r" id="ind-cn"></span></div>
+  <div class="npill" onclick="sw(this,'t-po')">Posture <span class="dot dot-r" id="ind-po"></span></div>
+  <div class="npill" onclick="sw(this,'t-mv')">Movements <span class="dot dot-r" id="ind-mv"></span></div>
+  <div class="npill" onclick="sw(this,'t-to')">Tone <span class="dot dot-r" id="ind-to"></span></div>
+  <div class="npill" onclick="sw(this,'t-rf')">Reflexes <span class="dot dot-r" id="ind-rf"></span></div>
+  <div class="npill" onclick="sw(this,'t-ms')">Milestones</div>
+  <div class="npill" onclick="sw(this,'t-bh')">Behaviour</div>
+  <div class="npill" onclick="sw(this,'t-su')">Summary &amp; risk</div>
+</div>
+
+<div class="tab vis" id="t-cn"><div class="scard"><div class="stitle">Assessment of cranial nerve function <span class="sscore" id="sc-cn">0 / 15</span></div><div id="cn-items"></div></div></div>
+<div class="tab" id="t-po"><div class="scard"><div class="stitle">Assessment of posture <span class="sscore" id="sc-po">0 / 18</span></div><p style="font-size:12px;color:var(--text3);margin-bottom:10px">Undress child to vest and nappy. Assess leg posture in all positions available (lying, sitting, standing) and average scores if they differ. Always record asymmetries.</p><div id="po-items"></div></div></div>
+<div class="tab" id="t-mv"><div class="scard"><div class="stitle">Assessment of movements <span class="sscore" id="sc-mv">0 / 6</span></div><p style="font-size:12px;color:var(--text3);margin-bottom:10px">Observe throughout the visit. Not a substitute for GMA. Score 2 if movements are not optimal but do not clearly fall into score 1 category.</p><div id="mv-items"></div></div></div>
+<div class="tab" id="t-to"><div class="scard"><div class="stitle">Assessment of tone <span class="sscore" id="sc-to">0 / 24</span></div><p style="font-size:12px;color:var(--text3);margin-bottom:10px">Perform with child lying on a flat surface. Always record asymmetries. If response is asymmetrical across two boxes, average the two scores (e.g. score 2 R + score 1 L = 1.5).</p><div id="to-items"></div></div></div>
+<div class="tab" id="t-rf"><div class="scard"><div class="stitle">Reflexes and reactions <span class="sscore" id="sc-rf">0 / 15</span></div><div id="rf-items"></div></div></div>
+<div class="tab" id="t-ms">
+  <div class="scard">
+    <div class="stitle">Motor milestones — section 2 <span style="font-size:11px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">not scored</span></div>
+    <p class="note">Record observed or reported level. Ask about toe-touching, rolling direction, bottom shuffling. Note age of independent walking (5 steps). Record any asymmetry.</p>
+    <div class="mg" id="ms-items"></div>
+  </div>
+</div>
+<div class="tab" id="t-bh">
+  <div class="scard">
+    <div class="stitle">Behaviour — section 3 <span style="font-size:11px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">not scored; max 15</span></div>
+    <p class="note">Conscious state 1–6, emotional state 1–5, social orientation 1–4. Not part of global score but important clinical record.</p>
+    <div id="bh-items"></div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="tab" id="t-su">
+  <div class="sum-wrap">
+    <div class="sum-title">Examination summary</div>
+    <div class="gs-row">
+      <div><div class="gs-lbl">Global optimality score</div><div class="gs-sub">Higher score = more optimal neurological function</div></div>
+      <div style="text-align:right"><span class="gs-val" id="sum-g">0</span><span class="gs-max"> / 78</span></div>
+    </div>
+    <div class="pbar"><div class="pfill" id="sum-bar" style="width:0%"></div></div>
+    <div class="sgrid">
+      <div class="smet"><div class="sl">Cranial nerves</div><div><span class="sv" id="sum-cn">0</span><span class="sm"> / 15</span></div></div>
+      <div class="smet"><div class="sl">Posture</div><div><span class="sv" id="sum-po">0</span><span class="sm"> / 18</span></div></div>
+      <div class="smet"><div class="sl">Movements</div><div><span class="sv" id="sum-mv">0</span><span class="sm"> / 6</span></div></div>
+      <div class="smet"><div class="sl">Tone</div><div><span class="sv" id="sum-to">0</span><span class="sm"> / 24</span></div></div>
+      <div class="smet"><div class="sl">Reflexes &amp; reactions</div><div><span class="sv" id="sum-rf">0</span><span class="sm"> / 15</span></div></div>
+      <div class="smet"><div class="sl">Asymmetries</div><div><span class="sv" id="sum-asy">0</span></div></div>
+    </div>
+    <div class="sbars" id="subscore-bars"></div>
+  </div>
+
+  <div class="scard">
+    <div class="stitle">Age-specific risk interpretation <span style="font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3)">Fehlings et al. Scoring Aid v5, 2023</span></div>
+    <div id="interp-body"></div>
+  </div>
+
+  <div id="asym-panel"></div>
+
+  <div class="scard">
+    <div class="stitle">Longitudinal reference chart</div>
+    <div class="chart-wrap"><canvas id="trendChart" role="img" aria-label="HINE score reference chart with optimality and CP cut-off lines from 3 to 18 months corrected age">Optimality: 67 (3m), 70 (6m), 73 (9m), 73 (12m), 74 (18m). CP cut-offs: 56, 59, 62, 65, 40.</canvas></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text2);margin-top:6px">
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:3px;background:#639922;display:inline-block;border-radius:2px"></span>Optimality (term)</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:16px;height:0;border-top:2px dashed #A32D2D;display:inline-block"></span>CP cut-off (high risk)</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#185FA5;display:inline-block"></span>Patient score</span>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="stitle">Reference — Fehlings et al. Scoring Aid (v5, Jun 2023)</div>
+    <table class="ref-table">
+      <thead><tr><th>Corrected age</th><th>Optimality (term)</th><th>CP cut-off</th><th>Correction: very preterm (≤32w)</th><th>Correction: late preterm (33–36w)</th></tr></thead>
+      <tbody>
+        <tr><td>3 months</td><td><span class="badge bg">≥ 67</span></td><td><span class="badge br">≤ 56</span></td><td>−3.5 pts</td><td>−3.5 pts</td></tr>
+        <tr><td>6 months</td><td><span class="badge bg">≥ 70</span></td><td><span class="badge br">≤ 59</span></td><td>−3 pts</td><td>−3 pts</td></tr>
+        <tr><td>9 months</td><td><span class="badge bg">≥ 73</span></td><td><span class="badge br">≤ 62</span></td><td>−2.5 pts</td><td>−1.5 pts</td></tr>
+        <tr><td>12 months</td><td><span class="badge bg">≥ 73</span></td><td><span class="badge br">≤ 65</span></td><td>−2 pts</td><td>−1 pt</td></tr>
+        <tr><td>18 months</td><td><span class="badge bg">≥ 74</span></td><td><span class="badge br">&lt; 40 (non-ambulant CP)</span></td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p class="ref-note">Optimality = 90th centile healthy term infants (Haataja et al. 1999, 2003). CP cut-off = high probability of CP in at-risk infants (Romeo et al. 2013). Preterm corrections = median difference (Romeo et al. 2016, 50th centile). Asymmetry score &gt; 5 = significant asymmetric neurological performance; refer for Baby-CIMT (Hay et al. 2018). If &gt; 5 items are unscored, calculate global score out of 63 and document.</p>
+  </div>
+
+  <div class="scard">
+    <div class="stitle">Clinical comments &amp; follow-up plan</div>
+    <textarea class="cmt-area" id="cmt" placeholder="Clinical comments, referrals made, follow-up plan, brain imaging result, GMA findings..."></textarea>
+  </div>
+
+  <div class="action-row">
+    <button class="abtn primary" onclick="doPrint()">Print / save as PDF</button>
+    <button class="abtn" onclick="doExportText()">Copy report text</button>
+    <button class="abtn" onclick="doClear()">Clear form</button>
+  </div>
+</div>
+
+<div class="footer">
+  HINE v 20.12.23 &nbsp;&bull;&nbsp; Haataja L et al. J Pediatrics 1999;135:153–61 &nbsp;&bull;&nbsp;
+  Fehlings D et al. HINE Scoring Aid v5, Jun 2023 &nbsp;&bull;&nbsp;
+  Official guidance: Cowan FM et al. Dec 2023 &nbsp;&bull;&nbsp;
+  <a href="https://www.mackeith.co.uk/hammersmith-neurological-examinations/" target="_blank">mackeith.co.uk</a>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ─── SECTION DATA with official guidance notes ─── */
+const SEC = {
+  cn:{lbl:'Cranial nerve function',max:15,el:'cn-items',sc:'sc-cn',items:[
+    {id:'facial',lbl:'Facial appearance',
+     sub:'Observe at rest and when crying or stimulated',
+     guide:'Observe for range of movements and symmetry; note mouth opening or dribbling. If no specific problem found but paucity of movement suspected, score 2. Glasses or hearing aids: examine WITHOUT aids and note findings.',
+     scoreGuide:[
+       {v:3,d:'Smiles or reacts to stimuli — closes eyes and grimaces'},
+       {v:2,d:'Closes eyes but not tightly; poor facial expression'},
+       {v:1,d:'Expressionless; does not react to stimuli'},
+     ],sc:[3,2,1],tips:['Smiles or reacts — grimace and eye closure','Closes eyes but not tightly, poor facial expression','Expressionless, does not react to stimuli'],asy:true},
+    {id:'eyemov',lbl:'Eye movements',
+     sub:'Observe spontaneous eye movements; then test with visual target',
+     guide:'First observe spontaneous movements. Present a black-and-white target (NOT a red woolly ball — no longer recommended). Move horizontally then vertically. Note strabismus, nystagmus, ptosis. Ensure child does not compensate by head-turning. Main aim: detect abnormal or limited eye movements.',
+     scoreGuide:[
+       {v:3,d:'Normal conjugate eye movements'},
+       {v:2,d:'Intermittent deviation or abnormal movements'},
+       {v:1,d:'Continuous deviation or abnormal movements'},
+       {v:0,d:'Continuous (severe) — score 0'},
+     ],sc:[3,2,1,0],tips:['Normal conjugate eye movements','Intermittent deviation or abnormal movements','Continuous deviation or abnormal movements','Continuous (severe)'],asy:true},
+    {id:'visual',lbl:'Visual response',
+     sub:'Follow black/white target; test vertical, horizontal, and circular arc',
+     guide:'Hold target 20–30 cm from baby; move at ~3°/second. Ensure child moves eyes fully and does not compensate by moving head. Do not speak to child while testing. If child does not follow: try a more interesting target (e.g. face), or a simpler target. Assess complete arc in all directions.',
+     scoreGuide:[
+       {v:3,d:'Follows target in a complete arc'},
+       {v:2,d:'Follows in an incomplete or asymmetrical arc'},
+       {v:1,d:'Does not follow the target'},
+     ],sc:[3,2,1],tips:['Follows target in a complete arc','Incomplete or asymmetrical arc','Does not follow'],asy:true},
+    {id:'audit',lbl:'Auditory response',
+     sub:'Rattle each side separately — rattle must not be seen by child',
+     guide:'Have an assistant out of the child\'s line of vision. Test each side separately. Ensure no attractive visual stimulus in the child\'s field of view. If formal hearing test was passed and no concerns, may assume score 3 — but document. Note: this is a behavioural test (sound processing), not the same as ABERs or OAEs.',
+     scoreGuide:[
+       {v:3,d:'Reacts to stimuli from both sides'},
+       {v:2,d:'Doubtful reaction or asymmetry of response'},
+       {v:1,d:'No response'},
+     ],sc:[3,2,1],tips:['Reacts to stimuli from both sides','Doubtful reaction or asymmetry','No response'],asy:true},
+    {id:'suck',lbl:'Sucking / swallowing',
+     sub:'Watch infant feed; if older, ask carer about difficulties, cough, dribbling',
+     guide:'Ideally watch feeding directly. Ask about feeding difficulties, coughing, dribbling, poor mouth closure. Score 2 if no definite difficulty but reportedly does not feed well. Note if NG tube or PEG in place — does not automatically mean score 0. Refer for detailed assessment if concerned.',
+     scoreGuide:[
+       {v:3,d:'Good suck and swallowing'},
+       {v:2,d:'Poor suck and/or swallow'},
+       {v:1,d:'No sucking reflex, no swallowing'},
+     ],sc:[3,2,1],tips:['Good suck and swallowing','Poor suck/swallow','No sucking reflex'],asy:false},
+  ]},
+  po:{lbl:'Posture',max:18,el:'po-items',sc:'sc-po',items:[
+    {id:'headsi',lbl:'Head in sitting',
+     sub:'Support at hips or low trunk only — not around shoulders',
+     guide:'Support as low as safely possible (hips/trunk) — not at shoulders. Assess head position relative to trunk.',
+     scoreGuide:[
+       {v:3,d:'Straight, in midline'},
+       {v:2,d:'Slightly to side or backward/forward'},
+       {v:1,d:'Markedly to side or backward/forward'},
+     ],sc:[3,2,1],tips:['Straight, in midline','Slightly to side or backward/forward','Markedly deviated'],asy:true},
+    {id:'trnksi',lbl:'Trunk in sitting',
+     sub:'Support at hips only; back must be really straight for score 3',
+     guide:'Support as low down as safely possible — not at shoulders. If child needs support at shoulders, score 0. Back needs to be straight most of the time to score 3.',
+     scoreGuide:[
+       {v:3,d:'Straight'},
+       {v:2,d:'Slightly curved or bent to side'},
+       {v:1,d:'Very rounded or rocking, bent sideways'},
+       {v:0,d:'Requires shoulder support to sit'},
+     ],sc:[3,2,1,0],tips:['Straight','Slightly curved/bent','Very rounded or bent sideways','Needs shoulder support'],asy:false},
+    {id:'arms',lbl:'Arms at rest',
+     sub:'Observe most prevalent spontaneous arm posture; can be in any position',
+     guide:'Observe in any position — lying preferred in younger infants; also sitting and standing in older infants. Arm should be in line with trunk shoulder-to-elbow and mostly neutral elbow-to-wrist (not supinated, but partially pronated is acceptable). No posture should be fixed.',
+     scoreGuide:[
+       {v:3,d:'Neutral, central, straight or slightly bent'},
+       {v:2,d:'Slight internal or external rotation'},
+       {v:1,d:'Intermittent dystonic posture'},
+       {v:0,d:'Marked rotation, dystonic, or hemiplegic posture'},
+     ],sc:[3,2,1,0],tips:['Neutral, straight or slightly bent','Slight internal/external rotation','Intermittent dystonic','Marked rotation/hemiplegic'],asy:true},
+    {id:'hands',lbl:'Hands',
+     sub:'Observe most prevalent spontaneous hand position throughout exam',
+     guide:'Hands should be mostly open without fixed postures. Record asymmetries.',
+     scoreGuide:[
+       {v:3,d:'Hands open'},
+       {v:2,d:'(Intermediate — not optimal, not persistently abnormal)'},
+       {v:1,d:'Intermittent adducted thumb or fisting'},
+       {v:0,d:'Persistent adducted thumb or fisting'},
+     ],sc:[3,2,1,0],tips:['Hands open','Intermediate','Intermittent adducted thumb/fisting','Persistent adducted thumb/fisting'],asy:true},
+    {id:'legsi',lbl:'Legs in sitting (long-sitting)',
+     sub:'Assess on flat surface with legs straight in front — not on chair',
+     guide:'Child must be on a flat surface with legs out in front (long sitting). Cannot assess on a chair. For non-sitters, observe leg posture from hips in supine and supported sitting. Focus is on legs — slightly rounded back is acceptable if legs are flat on surface.',
+     scoreGuide:[
+       {v:3,d:'Straight back, legs straight or slightly bent (long sitting)'},
+       {v:2,d:'(Intermediate)'},
+       {v:1,d:'Straight back but knees bent 15–20°'},
+       {v:0,d:'Unable to sit straight unless knees markedly bent — no long sitting'},
+     ],sc:[3,2,1,0],tips:['Long sitting — straight back, legs straight/slightly bent','Intermediate','Knees bent 15–20°','Unable to long-sit'],asy:false},
+    {id:'legss',lbl:'Legs in supine and standing',
+     sub:'Observe in all available positions; average score if they differ',
+     guide:'Active weight-bearing usually present from 5–7 months. Observe in lying, sitting, and standing if possible. Score in each position and average if scores differ across positions. Foot posture: note that apparent external rotation often comes from the hip — check if genuinely at the ankle.',
+     scoreGuide:[
+       {v:3,d:'Neutral, straight or slightly bent'},
+       {v:2,d:'Slight internal or external rotation'},
+       {v:1,d:'Internal or external rotation at the hips'},
+       {v:0,d:'Marked rotation or fixed extension/flexion/contractures'},
+     ],sc:[3,2,1,0],tips:['Neutral, straight/slightly bent','Slight internal/external rotation','Internal/external rotation at hips','Marked rotation or fixed posture'],asy:true},
+  ]},
+  mv:{lbl:'Movements',max:6,el:'mv-items',sc:'sc-mv',items:[
+    {id:'qty',lbl:'Quantity of movements',
+     sub:'Watch infant lying in supine',
+     guide:'Observe and note whether movements are normal in amount. Score 2 if not optimal but does not fall clearly into score 1.',
+     scoreGuide:[
+       {v:3,d:'Normal'},
+       {v:2,d:'Excessive or sluggish'},
+       {v:1,d:'Minimal or none'},
+     ],sc:[3,2,1],tips:['Normal','Excessive or sluggish','Minimal or none'],asy:false},
+    {id:'qlt',lbl:'Quality of movements',
+     sub:'Observe spontaneous voluntary motor activity throughout the assessment',
+     guide:'Some children will have slightly jerky movements (column 3 = score 1) but rarely fall into score 0. If not optimal but not in score 1 category, mark score 2. Not a substitute for GMA. Most infants assessed with HINE are outside the GMA age range.',
+     scoreGuide:[
+       {v:3,d:'Free, alternating, and smooth'},
+       {v:2,d:'Jerky or slight tremor'},
+       {v:1,d:'Cramped-synchronous, extensor spasms, athetoid, ataxic, very tremulous, myoclonic, or dystonic'},
+     ],sc:[3,2,1],tips:['Free, alternating, smooth','Jerky or slight tremor','Cramped, spasms, athetoid, ataxic, tremulous, myoclonic, dystonic'],asy:false},
+  ]},
+  to:{lbl:'Tone',max:24,el:'to-items',sc:'sc-to',items:[
+    {id:'scarf',lbl:'Scarf sign',
+     sub:'Pull arm across chest until resistance; note elbow position relative to midline',
+     guide:'Keep child\'s head in midline. Pull arm gently but firmly across chest. Note whether elbow reaches: outer border of cheek (score 3 range, does not cross midline), midline, or crosses midline. In younger infants elbow moves toward midline; in older infants it may pass it. Most infants will be in score 3 range but may score 1 if low tone allows elbow to pass contralateral cheek.',
+     scoreGuide:[
+       {v:3,d:'Elbow does not reach midline (optimal)'},
+       {v:2,d:'Elbow at or slightly past midline'},
+       {v:1,d:'Arm crosses easily; elbow to opposite side'},
+       {v:0,d:'Full crossing without resistance'},
+     ],sc:[3,2,1,0],tips:['Elbow does not reach midline','Elbow at/slightly past midline','Arm crosses easily','Full crossing, no resistance'],asy:true},
+    {id:'shld',lbl:'Passive shoulder elevation',
+     sub:'Lift arm at wrist, up alongside head; note resistance at shoulder and elbow',
+     guide:'Hold at wrist, lift arm vertically until it lies alongside the head. Do NOT make a circular movement. You usually meet some resistance that can be overcome by waiting a couple of seconds (score 3). Repeat each side to detect mild asymmetries.',
+     scoreGuide:[
+       {v:3,d:'Resistance overcomeable (normal)'},
+       {v:2,d:'Resistance difficult to overcome'},
+       {v:1,d:'No resistance (hypotonia)'},
+       {v:0,d:'Resistance cannot be overcome'},
+     ],sc:[3,2,1,0],tips:['Resistance overcomeable','Resistance difficult to overcome','No resistance','Resistance not overcomeable'],asy:true},
+    {id:'pron',lbl:'Pronation / supination',
+     sub:'Extend elbow; hold just below elbow; rotate forearm 180° at wrist',
+     guide:'Extend elbow as much as easily possible. Hold arm just below elbow with one hand. With other hand hold wrist and rotate forearm, pronating and supinating through 180°. Note resistance.',
+     scoreGuide:[
+       {v:3,d:'Full pronation and supination, no resistance'},
+       {v:2,d:'Resistance but overcomeable'},
+       {v:1,d:'Full range not possible; marked resistance'},
+     ],sc:[3,2,1],tips:['Full range, no resistance','Resistance but overcomeable','Full range not possible, marked resistance'],asy:true},
+    {id:'hipad',lbl:'Hip adductors',
+     sub:'Legs straight at hips and knees; abduct as far as possible; note angle between legs',
+     guide:'Child horizontal with nappy loosened. Legs straight at hips and knees, flat on mattress. Do NOT flex hips. Gently abduct as far as possible keeping knees extended. Note the total angle formed between both legs. Note: testing velocity-dependent tone/spastic catches (fast stretches) is NOT part of the HINE.',
+     scoreGuide:[
+       {v:3,d:'Optimal range 80–150° (legs abduct well)'},
+       {v:2,d:'150–160° (slightly wide)'},
+       {v:1,d:'> 170° (very wide — hypotonia)'},
+       {v:0,d:'< 80° (restricted — hypertonia)'},
+     ],sc:[3,2,1,0],tips:['Optimal 80–150°','150–160°','> 170°','< 80°'],asy:true},
+    {id:'popl',lbl:'Popliteal angle',
+     sub:'Flex hips onto abdomen; keep bottom on bed; extend knees; estimate angle',
+     guide:'Child on back. Flex hips so anterior thighs touch abdomen — keep bottom on bed (if bottom lifts, measured angle will be bigger). Keep thighs on abdomen and extend knees until resistance. Estimate angle behind the knee. Standardised testing both legs together; if impossible, test one at a time and document.',
+     scoreGuide:[
+       {v:3,d:'Optimal range 100–150°'},
+       {v:2,d:'150–160°'},
+       {v:1,d:'~90° or > 170°'},
+       {v:0,d:'< 80°'},
+     ],sc:[3,2,1,0],tips:['Optimal 100–150°','150–160°','~90° or >170°','<80°'],asy:true},
+    {id:'ankle',lbl:'Ankle dorsiflexion',
+     sub:'Knee extended and hip straight; flat hand on sole; dorsiflex ankle',
+     guide:'Important: keep leg straight at knee AND hip. Hold knee down on bed with flat of one hand on kneecap. Place other hand flat against sole; dorsiflex ankle as far as it naturally goes. Do not elicit toe grasp/plantar response. Some children voluntarily resist but are flexible — do slowly but firmly. Note any catch or sudden give (describe in comments). Testing for clonus is acceptable but not scored in HINE.',
+     scoreGuide:[
+       {v:3,d:'30–85° (optimal)'},
+       {v:2,d:'20–30° or 90°'},
+       {v:1,d:'< 20° or > 90°'},
+     ],sc:[3,2,1],tips:['30–85° (optimal)','20–30° or 90°','<20° or >90°'],asy:true},
+    {id:'pull',lbl:'Pull to sit',
+     sub:'Hold both wrists; pull from lying; watch head position as child comes up',
+     guide:'If child under-performs, repeat the manoeuvre. Difficult to score if crying and holding head back — repeat when calmer. If very floppy keep hand under head. Score evaluates head position relative to trunk during the pull.',
+     scoreGuide:[
+       {v:3,d:'Good head and trunk control — head in line with or ahead of trunk'},
+       {v:2,d:'Partial head lag'},
+       {v:1,d:'Complete head lag with hypotonia'},
+       {v:0,d:'Marked head lag; no trunk tone'},
+     ],sc:[3,2,1,0],tips:['Good head/trunk control','Partial head lag','Complete head lag','Marked head lag, no trunk tone'],asy:false},
+    {id:'vent',lbl:'Ventral suspension',
+     sub:'Hold horizontally around abdomen; note position of back, limbs and head',
+     guide:'Do NOT hold with one hand only — safety. Some children too heavy or may flop deliberately — document rather than score. If child messes around, repeat when more amenable.',
+     scoreGuide:[
+       {v:3,d:'Head and back straight; limbs semi-flexed'},
+       {v:2,d:'Head down; back curved'},
+       {v:1,d:'Completely limp'},
+     ],sc:[3,2,1],tips:['Head and back straight, limbs semi-flexed','Head down, back curved','Completely limp'],asy:false},
+  ]},
+  rf:{lbl:'Reflexes and reactions',max:15,el:'rf-items',sc:'sc-rf',items:[
+    {id:'armprot',lbl:'Arm protection',
+     sub:'Pull by one arm from supine (steady contralateral hip); note opposite arm reaction',
+     guide:'Lie child down, place hand on contralateral hip. Pull child slowly up by wrist. Watch free arm: to score 3 child must actively open hand, spread fingers, and weight-bear on surface. Score 2 if arm goes actively down but not fully weight-bearing or hand doesn\'t open. Score 1 if arm goes partially down. Score 0 if arm remains flexed. There must be an active component — not just flopping. If child sits independently, must have this response. Some older children won\'t respond as they enjoy falling — describe rather than score wrongly.',
+     scoreGuide:[
+       {v:3,d:'Arm and hand extend; hand opens; weight-bears on surface'},
+       {v:2,d:'Arm actively down but not fully weight-bearing or hand not open'},
+       {v:1,d:'Arm goes partially down but not to bed'},
+       {v:0,d:'Arm remains flexed by body'},
+     ],sc:[3,2,1,0],tips:['Arm and hand extend, weight-bears','Arm down but not fully / hand not open','Arm partially down','Arm fully flexed'],asy:true},
+    {id:'vertkck',lbl:'Vertical suspension kicking',
+     sub:'Hold below armpits, back toward you; tickle feet to encourage kicking',
+     guide:'Hold child vertically below armpits with their back toward you so they can see parent/carer. Observe kicking symmetry. Tickle feet if needed to encourage response. Looking for subtle differences between legs. Kicking vertically is harder than horizontal or sitting kicking. If too heavy or deliberately flops/stiffens, document and do not score.',
+     scoreGuide:[
+       {v:3,d:'Kicks symmetrically'},
+       {v:2,d:'Kicks one leg more or poor kicking'},
+       {v:1,d:'No kicking even with stimulation, or scissoring'},
+     ],sc:[3,2,1],tips:['Kicks symmetrically','Kicks one leg more/poor kicking','No kicking or scissoring'],asy:true},
+    {id:'lateral',lbl:'Lateral tilting',
+     sub:'Hold just above hips (not under armpits); tilt sideways ~45° slowly',
+     guide:'Hold just above hips — NOT high under armpits (they would not need to use trunk muscles). Back toward you. Tilt sideways slowly by ~45° — do not need to go horizontal. Score 3: brisk response with trunk curving upward AND leg and shoulder elevation. Score 2: some upward movement but not full. Score 1: feel trunk muscles working but trunk maintained horizontal without upward curve. Score 0: child flops downward.',
+     scoreGuide:[
+       {v:3,d:'Full lateral righting — trunk curves up with leg and shoulder elevation'},
+       {v:2,d:'Some upward movement but not full response'},
+       {v:1,d:'Trunk muscles active but no upward curving'},
+       {v:0,d:'Child flops downward'},
+     ],sc:[3,2,1,0],tips:['Full lateral righting with shoulder/leg elevation','Some upward movement, not full','Muscles active, no upward curve','Flops downward'],asy:true},
+    {id:'parach',lbl:'Forward parachute',
+     sub:'Hold above waist; tilt briskly forward toward surface; note arm response. Score 0 for ALL < 6m corrected.',
+     guide:'Hold child just above waist and tilt briskly forwards toward a surface beneath them. Look for forward symmetrical arm extension with hands opening. Seldom fully present before 6 months post-term — do NOT score before 6 months corrected age (always score 0). After 6 months: score 3 if present and symmetrical, score 1 if absent, score 2 if partial (e.g. hands not open). If asymmetrical: score 3 for normal side, score 1 or 2 for abnormal side; calculate as asymmetrical item.',
+     scoreGuide:[
+       {v:3,d:'Full symmetric arm extension, hands open'},
+       {v:2,d:'Partial response (e.g. hands not open or arms not fully extended)'},
+       {v:1,d:'Absent after 6 months corrected age'},
+       {v:0,d:'< 6 months corrected age — always score 0'},
+     ],sc:[3,2,1,0],tips:['Full symmetric arm extension','Partial response','Absent after 6m corrected','< 6m corrected — score 0'],asy:true},
+    {id:'tendon',lbl:'Tendon reflexes',
+     sub:'Child relaxed; use small hammer; assess biceps, knee, ankle',
+     guide:'Best done lying, but can be in other positions. Muscles around the tendon must be relaxed. For knee jerks, can tap tendon sharply with fingers when child relaxes. Tap on tendon — NOT kneecap or heel (painful). For biceps: hold elbow, place thumb over biceps tendon, tap thumb. If you feel the reflex but cannot see it — score as normal.',
+     scoreGuide:[
+       {v:3,d:'Easily elicitable — biceps, knee, ankle'},
+       {v:2,d:'Mildly brisk'},
+       {v:1,d:'Brisk'},
+       {v:0,d:'Clonus or absent'},
+     ],sc:[3,2,1,0],tips:['Easily elicitable','Mildly brisk','Brisk','Clonus or absent'],asy:true},
+  ]},
+};
+
+const MS=[
+  {id:'hc',lbl:'Head control',opts:['Cannot maintain upright (norm to 3m)','Wobbles (norm to 4m)','Maintained upright all time (norm from 5m)']},
+  {id:'sit',lbl:'Sitting',opts:['Cannot sit','With support at hips (4m)','Props (6m)','Stable sit (7–8m)','Pivots/rotates (9m)']},
+  {id:'grsp',lbl:'Voluntary grasp',opts:['No grasp','Uses whole hand','Index finger and thumb, immature','Pincer grasp']},
+  {id:'kick',lbl:'Kicking in supine',opts:['No kicking','Horizontal (legs do not lift)','Upward/vertical (3m)','Touches leg (4–5m)','Touches toes (5–6m)']},
+  {id:'roll',lbl:'Rolling',opts:['No rolling','Rolling to side (4m)','Prone to supine (6m)','Supine to prone (6m)']},
+  {id:'crawl',lbl:'Crawling',opts:['Does not lift head','On elbows (3m)','On outstretched hands (4m)','Flat on abdomen (8m)','Hands and knees (10m)']},
+  {id:'stand',lbl:'Standing',opts:['Does not support weight','Supports weight (4m)','Stands with support (7m)','Stands unaided (12m)']},
+  {id:'walk',lbl:'Walking',opts:['Bouncing (6m)','Cruising / holding on (12m)','Walking independently (by 15m)']},
+];
+const BH=[
+  {id:'cs',lbl:'Conscious state',opts:['1 Unrousable','2 Drowsy','3 Sleep, wakes easily','4 Awake, no interest','5 Loses interest','6 Maintains interest']},
+  {id:'em',lbl:'Emotional state',opts:['1 Irritable, not consolable','2 Irritable, carer can console','3 Irritable when approached','4 Neither happy nor unhappy','5 Happy and smiling']},
+  {id:'so',lbl:'Social orientation',opts:['1 Avoiding, withdrawn','2 Hesitant','3 Accepts approach','4 Friendly']},
+];
+const REFS={
+  3:{opt:67,cp:56,vpCorr:3.5,lpCorr:3.5},
+  6:{opt:70,cp:59,vpCorr:3,lpCorr:3},
+  9:{opt:73,cp:62,vpCorr:2.5,lpCorr:1.5},
+  12:{opt:73,cp:65,vpCorr:2,lpCorr:1},
+  18:{opt:74,cp:40,vpCorr:0,lpCorr:0},
+};
+const state={scores:{},asym:{},ms:{},bh:{}};
+let chartInst=null;
+let guidanceOpen={};
+
+function toggleGuidance(id){
+  guidanceOpen[id]=!guidanceOpen[id];
+  const box=document.getElementById('gb-'+id);
+  const btn=document.getElementById('gt-'+id);
+  if(box){box.className='guidance-box'+(guidanceOpen[id]?' open':'');}
+  if(btn){btn.textContent=guidanceOpen[id]?'▲ Hide guidance':'▼ Examiner guidance';}
+}
+
+function buildSec(sid){
+  const s=SEC[sid];
+  const c=document.getElementById(s.el);
+  let h='';
+  s.items.forEach(it=>{
+    const gid=sid+'-'+it.id;
+    let scoreLines='';
+    if(it.scoreGuide){
+      scoreLines=it.scoreGuide.map(sg=>`<div class="score-line"><span class="sc">Score ${sg.v}:</span><span>${sg.d}</span></div>`).join('');
+    }
+    h+=`<div class="irow">
+      <div class="ilabel">${it.lbl}</div>
+      ${it.sub?`<div class="isub">${it.sub}</div>`:''}
+      <span class="guidance-toggle" id="gt-${gid}" onclick="toggleGuidance('${gid}')">▼ Examiner guidance</span>
+      <div class="guidance-box" id="gb-${gid}">
+        <div style="margin-bottom:6px">${it.guide}</div>
+        <div class="scoring-guide-header">Scoring:</div>
+        ${scoreLines}
+        ${it.asy?'<div style="margin-top:6px;font-size:11px;color:var(--text3)">Record asymmetries: if asymmetrical across two boxes, average the two scores (e.g. score 2 + score 1 = 1.5).</div>':''}
+      </div>
+      <div class="sopts" id="op-${sid}-${it.id}">`;
+    it.sc.forEach((v,i)=>{h+=`<button class="sbtn" title="${it.tips[i]}" onclick="setSc('${sid}','${it.id}',${v},this)">${v}</button>`;});
+    h+=`</div>
+      ${it.asy?`<div class="arow"><input type="checkbox" id="asy-${sid}-${it.id}" onchange="setAsy('${sid}','${it.id}',this.checked)"><label for="asy-${sid}-${it.id}">Asymmetry noted</label></div>`:''}
+    </div>`;
+  });
+  c.innerHTML=h;
+}
+
+function setSc(sid,iid,v,btn){
+  state.scores[sid+':'+iid]=v;
+  btn.closest('.sopts').querySelectorAll('.sbtn').forEach(b=>b.className='sbtn');
+  btn.className='sbtn a'+v;upd();
+}
+function setAsy(sid,iid,chk){state.asym[sid+':'+iid]=chk;upd();}
+function getTotal(sid){
+  const s=SEC[sid];let t=0,f=0;
+  s.items.forEach(it=>{const k=sid+':'+it.id;if(state.scores[k]!==undefined){t+=state.scores[k];f++;}});
+  return{t,f,max:s.max,n:s.items.length};
+}
+
+function upd(){
+  let g=0,asyCount=0;
+  Object.keys(SEC).forEach(sid=>{
+    const{t,f,max,n}=getTotal(sid);g+=t;
+    document.getElementById('sc-'+sid).textContent=t+' / '+max;
+    document.getElementById('sum-'+sid).textContent=t;
+    const ind=document.getElementById('ind-'+sid);
+    if(ind)ind.className='dot '+(f===n?'dot-g':'dot-r');
+  });
+  Object.values(state.asym).forEach(v=>{if(v)asyCount++;});
+  document.getElementById('sum-g').textContent=g;
+  document.getElementById('sum-asy').textContent=asyCount;
+  document.getElementById('sum-bar').style.width=Math.round(g/78*100)+'%';
+  const colFor=p=>p>=90?'#639922':p>=70?'#BA7517':p>=50?'#993C1D':'#A32D2D';
+  const sdata=[
+    {lbl:'Cranial nerves',t:getTotal('cn').t,mx:15},
+    {lbl:'Posture',t:getTotal('po').t,mx:18},
+    {lbl:'Movements',t:getTotal('mv').t,mx:6},
+    {lbl:'Tone',t:getTotal('to').t,mx:24},
+    {lbl:'Reflexes',t:getTotal('rf').t,mx:15},
+  ];
+  document.getElementById('subscore-bars').innerHTML=sdata.map(d=>{
+    const pct=Math.round(d.t/d.mx*100);
+    return`<div class="si-row"><span class="si-name">${d.lbl}</span><div class="si-bar-wrap"><div class="si-bar-fill" style="width:${pct}%;background:${colFor(pct)}"></div></div><span class="si-score">${d.t}/${d.mx}</span><span class="si-pct">${pct}%</span></div>`;
+  }).join('');
+  buildInterpPanel(g,asyCount);
+  buildAsymPanel(asyCount);
+  buildChart(g);
+}
+
+function buildInterpPanel(g,asyCount){
+  const ageVal=document.getElementById('pt-corrected-age').value;
+  const gaVal=document.getElementById('pt-ga-cat').value;
+  const el=document.getElementById('interp-body');
+  if(!ageVal){
+    el.innerHTML=`<p style="font-size:13px;color:var(--text3);padding:.5rem 0">Select corrected age in the patient details section to generate age-specific interpretation.</p>`;
+    return;
+  }
+  const age=parseInt(ageVal);
+  const ref=REFS[age];
+  const corr=gaVal==='vp'?ref.vpCorr:gaVal==='lp'?ref.lpCorr:0;
+  const adjOpt=Math.round(ref.opt-corr);
+  const adjCp=Math.round(ref.cp-corr);
+  const gaLabel=gaVal==='vp'?'very preterm (≤32w)':gaVal==='lp'?'late preterm (33–36w)':'term';
+  const pct=v=>Math.max(0,Math.min(100,Math.round(v/78*100)));
+  const cpPct=pct(adjCp+1),optPct=pct(adjOpt),sPct=pct(g);
+  const monW=Math.max(0,optPct-cpPct);
+  let cls,band,title,desc,action;
+  if(age===18){
+    if(g>=ref.opt){cls='risk-green';band='Optimal';title='Score meets optimality threshold at 18 months';desc=`Total HINE score <strong>${g}</strong> meets or exceeds the optimality threshold of <strong>≥${adjOpt}</strong> at 18 months corrected age.`;action='Action: routine developmental surveillance; final HINE visit as per protocol. Reassure family.';}
+    else if(g>=40){cls='risk-amber';band='Monitoring zone';title='Score below optimality — monitoring and coaching indicated';desc=`Score <strong>${g}</strong> falls between the non-ambulant CP predictor (&lt;40) and optimality (<strong>≥${adjOpt}</strong>) at 18 months.`;action='Action: developmental paediatrics follow-up; physiotherapy and OT assessment; repeat in 3–6 months.';}
+    else{cls='risk-red';band='High probability of CP — non-ambulant';title='Score predictive of non-ambulant cerebral palsy';desc=`Score <strong>${g}</strong> at 18 months corrected age falls below 40 — predictive of <strong>non-ambulant CP</strong> (Romeo et al. 2008).`;action='Action: urgent MDT referral; brain MRI; early intensive intervention; mobility planning; family counselling.';}
+  } else {
+    if(g>=adjOpt){cls='risk-green';band='Optimal';title='Score meets or exceeds optimality threshold';desc=`Score <strong>${g}</strong> is at or above the optimality cut-off of <strong>≥${adjOpt}</strong> at ${age} months corrected age${corr>0?' (adjusted for '+gaLabel+')':''}. Consistent with typical neurological performance (90th centile of healthy term infants).`;action='Action: routine developmental surveillance. Repeat HINE at next follow-up. Reassure family with appropriate context.';}
+    else if(g>adjCp){cls='risk-amber';band='Monitoring zone';title='Score below optimality — monitoring and developmental coaching indicated';desc=`Score <strong>${g}</strong> falls between the CP high-probability cut-off (<strong>≤${adjCp}</strong>) and optimality (<strong>≥${adjOpt}</strong>) at ${age} months corrected age${corr>0?' (adjusted for '+gaLabel+')':''}. Neurological variations present but below the threshold for high-probability CP.`;action='Action: enhanced developmental surveillance with coaching. Repeat HINE in 3–4 months. If score approaches CP cut-off, escalate referral urgently. Correlate with brain imaging and GMA.';}
+    else{cls='risk-red';band='High probability of CP';title='Score at or below CP high-probability cut-off';desc=`Score <strong>${g}</strong> is at or below the CP cut-off of <strong>≤${adjCp}</strong> at ${age} months corrected age${corr>0?' (adjusted for '+gaLabel+')':''}. In children with etiologic risk factors (preterm, NE, IVH), this score is associated with high probability of developing CP (Romeo et al. 2013).`;action='Action: urgent developmental paediatrics referral; brain MRI if not yet done; early physiotherapy, OT, and speech therapy; repeat HINE in 4–6 weeks; family counselling and CP diagnosis discussion where appropriate.';}
+  }
+  const metricsHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div style="background:var(--bg2);border-radius:var(--radius);padding:.75rem 1rem"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">Total score</div><div style="font-size:22px;font-weight:600;color:var(--text)">${g}<span style="font-size:13px;color:var(--text3)"> / 78</span></div></div>
+    <div style="background:var(--bg2);border-radius:var(--radius);padding:.75rem 1rem"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">Optimality (${gaLabel})</div><div style="font-size:22px;font-weight:600;color:var(--green-text)">≥${adjOpt}</div></div>
+    <div style="background:var(--bg2);border-radius:var(--radius);padding:.75rem 1rem"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">CP cut-off${corr>0?' (adj.)':''}</div><div style="font-size:22px;font-weight:600;color:var(--red-text)">${age===18?'< 40':'≤'+adjCp}</div></div>
+  </div>`;
+  const zoneHTML=`
+    <div class="zone-labels"><span style="color:var(--text3)">0</span><span style="color:var(--red-bd);font-weight:500">≤${adjCp}</span><span style="color:var(--green-bd);font-weight:500">≥${adjOpt}</span><span style="color:var(--text3)">78</span></div>
+    <div class="zone-bar-wrap"><div style="position:relative;height:100%;width:100%">
+      <div style="position:absolute;left:0;top:0;width:${cpPct}%;height:100%;background:var(--red-bg)"></div>
+      <div style="position:absolute;left:${cpPct}%;top:0;width:${monW}%;height:100%;background:var(--amber-bg)"></div>
+      <div style="position:absolute;left:${optPct}%;top:0;width:${100-optPct}%;height:100%;background:var(--green-bg)"></div>
+      <div style="position:absolute;left:calc(${sPct}% - 2px);top:0;width:4px;height:100%;background:var(--text);border-radius:2px"></div>
+    </div></div>
+    <div class="zone-legend">
+      <div class="zl-item"><div class="zl-dot" style="background:var(--red-bg);border:1px solid var(--red-bd)"></div>High probability of CP</div>
+      <div class="zl-item"><div class="zl-dot" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"></div>Monitoring zone</div>
+      <div class="zl-item"><div class="zl-dot" style="background:var(--green-bg);border:1px solid var(--green-bd)"></div>Optimal</div>
+      <div class="zl-item"><div class="zl-dot" style="background:var(--text);width:4px;border-radius:1px"></div>Patient score (${g})</div>
+    </div>
+    ${corr>0?`<p style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6">Preterm correction (${gaLabel}): thresholds lowered by ${corr} points (Romeo et al. 2016 median, 50th centile).</p>`:''}`;
+  el.innerHTML=metricsHTML+zoneHTML+
+    `<div class="risk-card ${cls}" style="margin-top:12px;margin-bottom:0">
+      <div class="rk-band">${band}</div>
+      <div class="rk-title">${title}</div>
+      <div class="rk-desc">${desc}${asyCount>0?' <strong>Note: '+asyCount+' asymmetr'+(asyCount===1?'y':'ies')+' recorded — see asymmetry interpretation below.</strong>':''}</div>
+      <div class="rk-action">${action}</div>
+    </div>`;
+}
+
+function buildAsymPanel(asyCount){
+  const sig=asyCount>5;
+  document.getElementById('asym-panel').innerHTML=`<div class="asym-card ${sig?'asym-sig':'asym-ok'}">
+    <div class="rk-band">Asymmetry score: ${asyCount} &mdash; ${sig?'significant (> 5)':'within normal range (≤ 5)'}</div>
+    <div class="rk-title">${sig?'Significant asymmetric neurological performance':'No significant asymmetry detected'}</div>
+    <div class="rk-desc">${sig
+      ?`An asymmetry score of <strong>${asyCount}</strong> exceeds the cut-off of <strong>&gt; 5</strong> (Hay et al. Pediatr Neurol 2018). This is an <strong>independent risk marker for hemiplegic (unilateral) CP</strong> regardless of global score. Note: small asymmetries are not uncommon in early months; the Hay et al. cut-off was validated at a median age of 15 months when hemiplegia is more clinically apparent.`
+      :`An asymmetry score of <strong>${asyCount}</strong> is within the typical range (≤ 5). No significant asymmetric neurological performance at this assessment. Continue to monitor at each visit.`
+    }</div>
+    <div class="rk-action">${sig
+      ?'Action: refer for early intensive manual intervention — <strong>Baby Constraint Induced Movement Therapy (Baby-CIMT)</strong>. Brain MRI focusing on unilateral lesions (periventricular leukomalacia, infarct). Physiotherapy assessment of limb asymmetry. Reassess asymmetry score at next HINE.'
+      :'Action: document asymmetry score at each visit. Report and investigate any new functional asymmetry observed by caregivers or examiner.'
+    }</div>
+  </div>`;
+}
+
+function buildChart(g){
+  const ages=[3,6,9,12,18];
+  const opts=[67,70,73,73,74];
+  const cps=[56,59,62,65,40];
+  const ageVal=document.getElementById('pt-corrected-age').value;
+  const currentAge=ageVal?parseInt(ageVal):null;
+  const aidx=currentAge!==null?ages.indexOf(currentAge):-1;
+  if(chartInst){chartInst.destroy();chartInst=null;}
+  chartInst=new Chart(document.getElementById('trendChart'),{
+    type:'line',
+    data:{
+      labels:['3m','6m','9m','12m','18m'],
+      datasets:[
+        {label:'Optimality (term)',data:opts,borderColor:'#639922',borderWidth:2,pointRadius:4,pointBackgroundColor:'#639922',fill:false,tension:0.3},
+        {label:'CP cut-off',data:cps,borderColor:'#A32D2D',borderWidth:2,borderDash:[6,4],pointRadius:4,pointBackgroundColor:'#A32D2D',fill:false,tension:0.3},
+        {label:'Patient score',data:ages.map((_,i)=>i===aidx?g:null),borderColor:'#185FA5',borderWidth:0,pointRadius:ages.map((_,i)=>i===aidx?9:0),pointBackgroundColor:'#185FA5',fill:false,spanGaps:false},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{if(ctx.raw===null)return null;return ctx.dataset.label+': '+ctx.raw;}}}},
+      scales:{y:{min:30,max:78,title:{display:true,text:'HINE score',font:{size:11}},ticks:{font:{size:11}}},x:{ticks:{font:{size:11}}}}
+    }
+  });
+}
+
+function buildMS(){
+  document.getElementById('ms-items').innerHTML=MS.map(m=>
+    `<div class="mi"><label>${m.lbl}</label><select onchange="state.ms['${m.id}']=this.value"><option value="">— select —</option>${m.opts.map((o,i)=>`<option value="${i}">${o}</option>`).join('')}</select></div>`
+  ).join('');
+}
+function buildBH(){
+  document.getElementById('bh-items').innerHTML=BH.map(b=>
+    `<div class="bb"><label>${b.lbl}</label><div class="bbtns">${b.opts.map((o,i)=>`<button class="bbtn" title="${o}" onclick="setBH('${b.id}',${i+1},this)">${i+1}</button>`).join('')}</div></div>`
+  ).join('');
+}
+function setBH(id,v,btn){state.bh[id]=v;btn.closest('.bbtns').querySelectorAll('.bbtn').forEach(b=>b.className='bbtn');btn.className='bbtn act';}
+
+function sw(pill,tid){
+  document.querySelectorAll('.npill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('vis'));
+  document.getElementById(tid).classList.add('vis');
+  if(tid==='t-su')upd();
+}
+
+function doPrint(){window.print();}
+
+function doExportText(){
+  upd();
+  const nm=document.getElementById('pt-name').value||'—';
+  const dob=document.getElementById('pt-dob').value||'—';
+  const gacat=document.getElementById('pt-ga-cat').value;
+  const gaLabel=gacat==='vp'?'Very preterm (≤32w)':gacat==='lp'?'Late preterm (33–36w)':'Term (≥37w)';
+  const doe=document.getElementById('pt-doe').value||'—';
+  const hc=document.getElementById('pt-hc').value||'—';
+  const corrAge=document.getElementById('pt-corrected-age').value;
+  const chron=document.getElementById('pt-chrono').value||'—';
+  const exam=document.getElementById('pt-examiner').value||'—';
+  const mri=document.getElementById('pt-mri').value||'—';
+  const gma=document.getElementById('pt-gma').value||'Not done';
+  const cmt=document.getElementById('cmt').value||'—';
+  let g=0;Object.keys(SEC).forEach(s=>{g+=getTotal(s).t;});
+  let asyCount=0;Object.values(state.asym).forEach(v=>{if(v)asyCount++;});
+  let interpLine='Corrected age not specified.';
+  if(corrAge){
+    const age=parseInt(corrAge);const ref=REFS[age];
+    const corr=gacat==='vp'?ref.vpCorr:gacat==='lp'?ref.lpCorr:0;
+    const adjOpt=Math.round(ref.opt-corr);const adjCp=Math.round(ref.cp-corr);
+    if(g>=adjOpt)interpLine=`OPTIMAL — score ${g} meets optimality threshold ≥${adjOpt} at ${age}m${corr>0?' (preterm-adjusted)':''}.`;
+    else if(age===18&&g<40)interpLine=`HIGH PROBABILITY non-ambulant CP — score ${g} is below 40 at 18m.`;
+    else if(g>adjCp)interpLine=`MONITORING ZONE — score ${g} between CP cut-off ≤${adjCp} and optimality ≥${adjOpt} at ${age}m${corr>0?' (preterm-adjusted)':''}.`;
+    else interpLine=`HIGH PROBABILITY OF CP — score ${g} at or below CP cut-off ≤${adjCp} at ${age}m${corr>0?' (preterm-adjusted)':''}.`;
+  }
+  const asymLine=asyCount>5
+    ?`SIGNIFICANT (score ${asyCount} > 5) — refer for Baby-CIMT; investigate for unilateral lesion (Hay et al. 2018).`
+    :`Within normal range (score ${asyCount} ≤ 5) — continue monitoring.`;
+  const txt=[
+    'HINE ASSESSMENT REPORT','======================','',
+    `Patient        : ${nm}`,`Date of birth  : ${dob}`,`Gestational age: ${gaLabel}`,
+    `Examiner       : ${exam}`,`Date of exam   : ${doe}`,`Chron. age     : ${chron}`,
+    `Corrected age  : ${corrAge?corrAge+'m':'—'}`,`Head circ.     : ${hc} cm`,
+    `Brain imaging  : ${mri}`,`GMA            : ${gma}`,'',
+    'SECTION SCORES','--------------',
+    `Cranial nerve function : ${getTotal('cn').t} / 15`,
+    `Posture                : ${getTotal('po').t} / 18`,
+    `Movements              : ${getTotal('mv').t} / 6`,
+    `Tone                   : ${getTotal('to').t} / 24`,
+    `Reflexes and reactions : ${getTotal('rf').t} / 15`,'',
+    `GLOBAL SCORE           : ${g} / 78`,`Asymmetry score        : ${asyCount}`,'',
+    'RISK INTERPRETATION (Fehlings et al. Scoring Aid v5, 2023)','----------------------------------------------------------',interpLine,'',
+    'ASYMMETRY INTERPRETATION (Hay et al. Pediatr Neurol 2018)','---------------------------------------------------------',asymLine,'',
+    'CLINICAL COMMENTS','-----------------',cmt,'','---',
+    'HINE v 20.12.23 | Haataja L et al. J Pediatrics 1999;135:153-61',
+    'Fehlings D et al. HINE Scoring Aid v5, Jun 2023',
+    'Official guidance: Cowan FM et al. December 2023',
+  ].join('\n');
+  navigator.clipboard.writeText(txt).then(()=>alert('Report copied to clipboard.')).catch(()=>alert('Copy failed — use Print / Save as PDF instead.'));
+}
+
+function doClear(){
+  if(!confirm('Clear all scores and reset the form?'))return;
+  Object.assign(state,{scores:{},asym:{},ms:{},bh:{}});
+  guidanceOpen={};
+  document.querySelectorAll('.sbtn').forEach(b=>b.className='sbtn');
+  document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+  document.querySelectorAll('.bbtn').forEach(b=>b.className='bbtn');
+  document.querySelectorAll('.guidance-box').forEach(b=>{b.className='guidance-box';});
+  document.querySelectorAll('.guidance-toggle').forEach(b=>{b.textContent='▼ Examiner guidance';});
+  document.getElementById('cmt').value='';
+  ['pt-name','pt-dob','pt-doe','pt-chrono','pt-hc','pt-examiner','pt-mri'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['pt-ga-cat','pt-corrected-age','pt-gma'].forEach(id=>{const e=document.getElementById(id);if(e)e.selectedIndex=0;});
+  document.querySelectorAll('.mi select').forEach(s=>s.selectedIndex=0);
+  upd();
+}
+
+Object.keys(SEC).forEach(buildSec);
+buildMS();buildBH();upd();
+</script>
+</body>
+</html>
