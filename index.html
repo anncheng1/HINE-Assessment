@@ -228,17 +228,66 @@ body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:
 .quiz-opts .qopt{margin-top:0}
 .quiz-opts .qopt b{display:inline-block;min-width:58px}
 .src-note{font-size:11px;color:var(--text3);line-height:1.6;margin-top:1rem;padding-top:8px;border-top:0.5px solid var(--border)}
-/* ─── Lightbox ─── */
-.lb{position:fixed;inset:0;background:rgba(10,10,10,.92);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+/* ─── Lightbox (full screen, pinch zoom) ─── */
+.lb{position:fixed;inset:0;background:#0b0b0b;z-index:200;display:none;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .lb.open{display:flex}
-.lb-img-wrap{max-width:1200px;width:100%;flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;min-height:0}
-.lb-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:4px}
-.lb-img-wrap.zoom{align-items:flex-start;justify-content:flex-start}
-.lb-img-wrap.zoom img{max-width:none;max-height:none;width:200%}
-.lb-cap{color:#f0efe9;font-size:13px;margin-top:10px;text-align:center;max-width:900px;line-height:1.5}
-.lb-bar{display:flex;gap:8px;margin-top:10px}
-.lb-bar button{padding:8px 14px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:13px;cursor:pointer;font-family:var(--font)}
-.lb-bar button:disabled{opacity:.35}
+.lb-top{display:flex;align-items:center;gap:10px;padding:10px 12px;color:#f0efe9}
+.lb-cap{flex:1;font-size:13px;line-height:1.4}
+.lb-x{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;flex-shrink:0}
+.lb-x.dark{background:var(--bg2);color:var(--text)}
+.lb-stage{flex:1;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;background:#fff;-webkit-user-drag:none}
+.lb-rot{color:#FAC775;font-size:12px;text-align:center;padding:4px}
+.lb-bar{display:flex;gap:8px;justify-content:center;padding:8px}
+.lb-bar button{min-width:52px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font-size:15px;cursor:pointer;font-family:var(--font)}
+.lb-bar button:disabled{opacity:.3}
+.lb-tip{color:rgba(255,255,255,.5);font-size:11px;text-align:center;padding:0 0 10px}
+/* ─── Examples bottom sheet ─── */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;display:none;align-items:flex-end;justify-content:center}
+.sheet.open{display:flex}
+.sheet-card{background:var(--bg);width:100%;max-width:760px;max-height:92vh;border-radius:16px 16px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--border);font-size:13px;font-weight:600}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 20px}
+/* ─── Example ladder ─── */
+.exp-grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+.exp-gl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);min-width:68px}
+.exp-chip{font-size:12px;padding:7px 12px;border-radius:18px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);cursor:pointer;font-family:var(--font)}
+.exp-chip.on{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500}
+.lad-title{font-size:16px;font-weight:600;margin:16px 0 8px}
+.lad{border:0.5px solid var(--border);border-left:4px solid var(--border2);border-radius:var(--radius);padding:10px;margin-bottom:10px;background:var(--bg)}
+.lad.s3{border-left-color:var(--green-bd)}.lad.s2{border-left-color:var(--amber-bd)}.lad.s1{border-left-color:var(--orange-bd)}.lad.s0{border-left-color:var(--red-bd)}
+.lad-case{border-left-color:var(--info-bd);background:var(--info-bg)}
+.lad-empty{display:flex;gap:8px;align-items:center;padding:7px 10px;opacity:.75}
+.lad-empty i{color:var(--text3)}
+.lad-h{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.lad-d{font-size:13px;line-height:1.45;color:var(--text)}
+.lad-note{display:block;font-size:12px;color:var(--text2);font-weight:500;margin-top:2px}
+.sbadge{flex-shrink:0;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.sbadge.s3{background:var(--green-bg);color:var(--green-text)}.sbadge.s2{background:var(--amber-bg);color:var(--amber-text)}
+.sbadge.s1{background:var(--orange-bg);color:var(--orange-text)}.sbadge.s0{background:var(--red-bg);color:var(--red-text)}
+.sbadge.sc{background:var(--info-bd);color:#fff}
+.lad-imgs{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.lad-ph{flex:1 1 200px;min-width:0;max-width:100%;height:240px;object-fit:cover;border-radius:6px;cursor:zoom-in;background:#ddd}
+.lad-dr{height:120px;width:auto;max-width:46%;object-fit:contain;background:#fff;border:0.5px solid var(--border);border-radius:6px;padding:4px;cursor:zoom-in}
+.lad-slide{margin-top:4px;font-size:12px;padding:8px 12px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:var(--font)}
+/* ─── Deck photo strip ─── */
+.ph-strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin-top:10px;padding-bottom:4px}
+.ph-strip figure{flex:0 0 auto;scroll-snap-align:start;margin:0;cursor:zoom-in}
+.ph-strip img{height:220px;width:auto;max-width:82vw;object-fit:cover;border-radius:8px;display:block;background:#fff}
+.ph-strip figcaption{font-size:11px;color:var(--text2);margin-top:3px}
+.zoom-badge{position:absolute;right:8px;bottom:8px;font-size:11px;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:12px;pointer-events:none}
+.quiz-photos{display:flex;gap:6px;justify-content:center;background:var(--bg2);border-radius:var(--radius);border:0.5px solid var(--border);padding:6px}
+.quiz-photos img{flex:1 1 0;min-width:0;max-height:420px;object-fit:contain;border-radius:6px;cursor:zoom-in}
+@media(max-width:560px){
+  .lad-ph{flex-basis:100%;height:auto;max-height:420px;object-fit:contain;background:var(--bg2)}
+  .lad-dr{height:96px}
+  .quiz-photos{flex-direction:column;align-items:stretch}
+  .quiz-photos img{max-height:none;width:100%}
+  #mode-train .scard{padding:1rem .75rem}
+  .deck-img-wrap{margin:0 -.75rem;border-radius:0;border-left:none;border-right:none}
+  .exp-gl{min-width:100%;margin-top:4px}
+  .lb-bar button{flex:1}
+}
 @media(max-width:560px){
   .case-pick,.ex-grid{grid-template-columns:1fr 1fr}
   .quiz-opts{grid-template-columns:1fr}
@@ -251,7 +300,7 @@ body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:
 @media print{
   body{background:white;padding:0;font-size:11px}
   .container{max-width:100%}
-  .nav-pills,.action-row,.guidance-toggle,.ex-toggle,.mode-switch,#mode-train,.lb,.install-btn,.offline-tag,.install-hint{display:none!important}
+  .nav-pills,.action-row,.guidance-toggle,.ex-toggle,.mode-switch,#mode-train,.lb,.install-btn,.offline-tag,.install-hint,.sheet{display:none!important}
   .side-row.open{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .guidance-box{display:none!important}
   .tab{display:block!important}
@@ -298,9 +347,10 @@ body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:
     <div id="deck-how"></div>
   </div></div>
   <div class="tab" id="tr-ex"><div class="scard">
-    <div class="stitle">Scoring examples — photos for each score</div>
-    <p class="tr-intro">Each slide shows the proforma descriptor next to a real infant at that score. Faces are masked in the source material. Tap a card to open it, then use the arrows to move between items. In Assessment mode, the green <b>📷 Examples</b> button next to an item opens the same slides.</p>
-    <div class="ex-grid" id="ex-grid"></div>
+    <div class="stitle">Scoring examples: what each score looks like</div>
+    <p class="tr-intro">Choose an item to see real infants at each score, beside the proforma drawing. Tap any picture to enlarge it, then pinch or double-tap to zoom. Faces are masked in the source material.</p>
+    <div id="ex-pick"></div>
+    <div id="ex-ladder"></div>
   </div></div>
   <div class="tab" id="tr-int"><div class="scard">
     <div class="stitle">Interpreting HINE scores</div>
@@ -466,20 +516,29 @@ body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:
 </div>
 </div><!-- /mode-assess -->
 
-<div class="lb" id="lb" onclick="if(event.target===this)lbClose()">
-  <div class="lb-img-wrap" id="lb-wrap"><img id="lb-img" alt="" onclick="document.getElementById('lb-wrap').classList.toggle('zoom')"></div>
-  <div class="lb-cap" id="lb-cap"></div>
+<div class="lb" id="lb">
+  <div class="lb-top"><span class="lb-cap" id="lb-cap"></span><button class="lb-x" onclick="lbClose()" aria-label="Close">✕</button></div>
+  <div class="lb-stage" id="lb-stage"><img id="lb-img" alt="" draggable="false"></div>
+  <div class="lb-rot" id="lb-rot" hidden>↻ Turn your phone sideways for a larger view</div>
   <div class="lb-bar">
-    <button id="lb-prev" onclick="lbStep(-1)">← Prev</button>
-    <button onclick="document.getElementById('lb-wrap').classList.toggle('zoom')">Zoom</button>
-    <button onclick="lbClose()">Close ✕</button>
-    <button id="lb-next" onclick="lbStep(1)">Next →</button>
+    <button id="lb-prev" onclick="lbStep(-1)">‹ Prev</button>
+    <button onclick="zTo(Z.s/1.5,0,0)" aria-label="Zoom out">−</button>
+    <button onclick="zTo(Z.s*1.5,0,0)" aria-label="Zoom in">+</button>
+    <button id="lb-next" onclick="lbStep(1)">Next ›</button>
+  </div>
+  <div class="lb-tip">Pinch or double-tap to zoom · drag to move · swipe for next</div>
+</div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)sheetClose()">
+  <div class="sheet-card">
+    <div class="sheet-top"><span>📷 Examples: tap a picture to enlarge</span><button class="lb-x dark" onclick="sheetClose()" aria-label="Close">✕</button></div>
+    <div class="sheet-body" id="sheet-body"></div>
   </div>
 </div>
 
 <div class="footer">
   HINE v 20.12.23 &nbsp;&bull;&nbsp; Haataja L et al. J Pediatrics 1999;135:153–61 &nbsp;&bull;&nbsp;
-  Fehlings D et al. HINE Scoring Aid v5, Jun 2023 &nbsp;&bull;&nbsp;
+  Fehlings D et al. HINE Scoring Aid, Dev Med Child Neurol 2024 &nbsp;&bull;&nbsp;
   Official guidance: Cowan FM et al. Dec 2023 &nbsp;&bull;&nbsp;
   <a href="https://www.mackeith.co.uk/hammersmith-neurological-examinations/" target="_blank">mackeith.co.uk</a>
 </div>
@@ -1070,34 +1129,60 @@ function doClear(){
 const IMG='img/';
 const S=(img,title,notes,q)=>({img,title,notes,q});
 
-/* Item → example slides (opened from Assessment mode) */
-const EXMAP={
-  facial:[['web-09','Cranial nerves: how to test each item']],
-  eyemov:[['web-09','Cranial nerves: how to test each item']],
-  visual:[['web-09','Cranial nerves: high-contrast target, slow circular arc, no noise']],
-  audit:[['web-09','Cranial nerves: rattle or clap out of sight, each side']],
-  suck:[['web-09','Cranial nerves: suck/swallow by report or soother']],
-  headsi:[['ex-03','Head in sitting: scores 3, 1 and 0']],
-  trnksi:[['ex-04','Trunk in sitting: scores 3, 1 and 0'],['cs2-09','Pitfall: straight spine but rocketing back = score 0']],
-  arms:[['ex-05','Arms at rest: scores 3, 1 and 0'],['cs1-06','Case 1 at 6 months: persistent asymmetry and stiffness, left arm']],
-  hands:[['ex-06','Hands: scores 3 and 0'],['cs1-06','Case 1 at 6 months: left hand fisting']],
-  legs:[['ex-07','Legs in sitting (long sitting): scores 3, 1 and 0'],['ex-08','Legs in supine and standing: scores 3, 1 and 0']],
-  feet:[['ex-09','Feet in supine and standing: scores 3 and 0'],['cs1-13','Case 1 at 9 months: left foot, marked rotation']],
-  qty:[['web-12','Movements: quantity in supine; quality throughout']],
-  qlt:[['web-12','Movements: quantity in supine; quality throughout']],
-  scarf:[['web-13','Scarf sign: stabilise at pelvis, no trunk rotation']],
-  shld:[['web-13','Passive shoulder elevation: one arm, then both; resistance above 90°']],
-  pron:[['web-13','Pronation/supination: elbow extended, support above the elbow']],
-  hipad:[['ex-10','Hip adductors: angle ranges for each score'],['cs2-08','Case 2: restricted hip abduction']],
-  popl:[['web-14','Popliteal angle technique'],['cs1-07','Case 1: heels not parallel = a difference in popliteal angle']],
-  ankle:[['web-14','Ankle dorsiflexion: knee extended, flat hand on sole; note R1 angle']],
-  pull:[['ex-11','Pull to sit: scores 3, 1 and 0']],
-  vent:[['ex-12','Ventral suspension: scores 3 to 0']],
-  armprot:[['ex-13','Arm protection: scores 3 to 0'],['cs1-12','Case 1 at 9 months: R score 2, L score 1']],
-  vertkck:[['web-15','Vertical suspension technique']],
-  lateral:[['ex-14','Lateral tilting: scores 3 to 0'],['cs1-08','Case 1: asymmetric lateral tilt']],
-  parach:[['web-16','Forward parachute technique'],['cs1-09','Case 1: reaction on R, none on L (arm flexed)']],
-  tendon:[['web-16','Tendon reflexes: strike your thumb over the tendon']],
+/* ─── Example images: real infant photos + proforma drawings per score ─── */
+const E=n=>'ex/'+n, C=n=>'cs/'+n;
+const EXP=[
+  {k:'head',grp:'Posture',lbl:'Head in sitting',item:'headsi',slide:'ex-03',sc:{
+    3:{ph:[E('ex03_s3_p0')],dr:E('ex03_s3_d')},1:{ph:[E('ex03_s1_p0')],dr:E('ex03_s1_d')},0:{ph:[E('ex03_s0_p0')],dr:E('ex03_s0_d')}}},
+  {k:'trunk',grp:'Posture',lbl:'Trunk in sitting',item:'trnksi',slide:'ex-04',sc:{
+    3:{ph:[E('ex04_s3_p0')],dr:E('ex04_s3_d')},1:{ph:[E('ex04_s1_p0')],dr:E('ex04_s1_d')},0:{ph:[E('ex04_s0_p0'),E('ex04_s0_p1')],dr:E('ex04_s0_d')}},
+    extra:[{ph:[C('cs2-09_p0')],cap:'Pitfall (Case 2): the spine looks straight, but the child is “rocketing” back into extension: <b>score 0</b>.'}]},
+  {k:'arms',grp:'Posture',lbl:'Arms at rest',item:'arms',slide:'ex-05',sc:{
+    3:{ph:[E('ex05_s3_p0')]},1:{ph:[E('ex05_s1_p0')],note:'Left arm (circled)'},0:{ph:[E('ex05_s0_p0')],note:'Right arm (circled)'}},
+    extra:[{ph:[C('cs1-06_p0'),C('cs1-06_p1')],cap:'Case 1 at 6 months: persistent asymmetry and stiffness of the <b>left arm</b> (★) in different positions. Arms 1.5 A.'}]},
+  {k:'hands',grp:'Posture',lbl:'Hands',item:'hands',slide:'ex-06',sc:{
+    3:{ph:[E('ex06_s3_p0')]},0:{ph:[E('ex06_s0_p0')],note:'Right hand (circled), persistent fisting'}}},
+  {k:'legsit',grp:'Posture',lbl:'Legs in sitting',item:'legs',part:'Sitting',slide:'ex-07',sc:{
+    3:{ph:[E('ex07_s3_p0')],dr:E('ex07_s3_d')},1:{ph:[E('ex07_s1_p0')],dr:E('ex07_s1_d')},0:{ph:[E('ex07_s0_p0')],dr:E('ex07_s0_d')}}},
+  {k:'legstand',grp:'Posture',lbl:'Legs in supine/standing',item:'legs',part:'Supine',slide:'ex-08',sc:{
+    3:{ph:[E('ex08_s3_p0')],note:'Left leg (circled)'},1:{ph:[E('ex08_s1_p0')]},0:{ph:[E('ex08_s0_p0')]}}},
+  {k:'feet',grp:'Posture',lbl:'Feet',item:'feet',slide:'ex-09',sc:{
+    3:{ph:[E('ex09_s3_p0')],note:'Left foot (circled)'},0:{ph:[E('ex09_s0_p0'),E('ex09_s0_p1'),E('ex09_s0_p2')],note:'Persistent posture'}},
+    extra:[{ph:[C('cs1-13_p0'),C('cs1-13_p1')],cap:'Case 1 at 9 months: right foot neutral (3), left foot marked rotation at the ankle (0) → <b>1.5 A</b>.'}]},
+  {k:'hipad',grp:'Tone',lbl:'Hip adductors',item:'hipad',slide:'ex-10',sc:{
+    3:{dr:E('ex10_s3_d')},2:{dr:E('ex10_s2_d')},1:{dr:E('ex10_s1_d')},0:{dr:E('ex10_s0_d')}},
+    extra:[{ph:[C('cs2-08_p0')],cap:'Case 2 (bilateral PVL): abduction angle <b>&lt;80°</b> = score 0.'}]},
+  {k:'popl',grp:'Tone',lbl:'Popliteal angle',item:'popl',sc:{},
+    extra:[{ph:[C('cs1-07_p0')],cap:'Case 1: the heels are not parallel, so the popliteal angle differs between legs: <b>2 A</b>.'}]},
+  {k:'pull',grp:'Tone',lbl:'Pull to sit',item:'pull',slide:'ex-11',sc:{
+    3:{ph:[E('ex11_s3_p0')],dr:E('ex11_s3_d')},1:{ph:[E('ex11_s1_p0')],dr:E('ex11_s1_d')},0:{ph:[E('ex11_s0_p0')],dr:E('ex11_s0_d')}}},
+  {k:'vent',grp:'Tone',lbl:'Ventral suspension',item:'vent',slide:'ex-12',sc:{
+    3:{ph:[E('ex12_s3_p0')],dr:E('ex12_s3_d')},2:{ph:[E('ex12_s2_p0')]},1:{ph:[E('ex12_s1_p0')],dr:E('ex12_s1_d')},0:{ph:[E('ex12_s0_p0')],dr:E('ex12_s0_d')}}},
+  {k:'armprot',grp:'Reactions',lbl:'Arm protection',item:'armprot',slide:'ex-13',sc:{
+    3:{ph:[E('ex13_s3_p0')],dr:E('ex13_s3_d')},2:{ph:[E('ex13_s2_p0')],note:'Arm goes down but the hand stays closed'},1:{ph:[E('ex13_s1_p0')],dr:E('ex13_s1_d')},0:{ph:[E('ex13_s0_p0')],dr:E('ex13_s0_d')}},
+    extra:[{ph:[C('cs1-12_p0'),C('cs1-12_p1'),C('cs1-12_p2')],cap:'Case 1 at 9 months: right hand not open or weight-bearing = 2; left arm semi-flexed with hand fisted = 1 → <b>1.5 A</b>.'}]},
+  {k:'lateral',grp:'Reactions',lbl:'Lateral tilting',item:'lateral',slide:'ex-14',sc:{
+    3:{ph:[E('ex14_s3_p0')],dr:E('ex14_s3_d')},2:{ph:[E('ex14_s2_p0')],dr:E('ex14_s2_d')},1:{ph:[E('ex14_s1_p0')],dr:E('ex14_s1_d')},0:{ph:[E('ex14_s0_p0')],dr:E('ex14_s0_d')}},
+    extra:[{ph:[C('cs1-08_p0'),C('cs1-08_p1')],cap:'Case 1: the response differs when tilted to each side (red line = trunk curve) → <b>0.5 A</b>.'}]},
+  {k:'parach',grp:'Reactions',lbl:'Forward parachute',item:'parach',sc:{},
+    extra:[{ph:[C('cs1-09_p0')],cap:'Case 1: reaction seen on the right; <b>no reaction on the left</b> (arm stays flexed) → 2 A.'}]},
+];
+/* Which assessment items get a 📷 Examples button (only where real images exist) */
+const EXMAP={};EXP.forEach(e=>{(EXMAP[e.item]=EXMAP[e.item]||[]).push(e.k);});
+/* Photo strips shown under training slides */
+const PH={
+  'web-11':[[E('ex03_s3_p0'),'Head: score 3'],[E('ex04_s3_p0'),'Trunk: score 3'],[E('ex05_s3_p0'),'Arms: score 3'],[E('ex06_s3_p0'),'Hands open: score 3'],[E('ex07_s3_p0'),'Long sitting: score 3'],[E('ex09_s3_p0'),'Feet: score 3']],
+  'web-14':[[E('ex10_s3_d'),'Hip adductors: optimal range 150–80°'],[C('cs1-07_p0'),'Popliteal angle technique']],
+  'web-15':[[E('ex13_s3_p0'),'Arm protection: score 3'],[E('ex14_s3_p0'),'Lateral tilt: score 3']],
+  'web-16':[[C('cs1-09_p0'),'Forward parachute']],
+  'cs1-06':[[C('cs1-06_p0'),'Left arm (★)'],[C('cs1-06_p1'),'Left arm (★)']],
+  'cs1-07':[[C('cs1-07_p0'),'Popliteal angle']],
+  'cs1-08':[[C('cs1-08_p0'),'Tilt to one side'],[C('cs1-08_p1'),'Tilt to the other side']],
+  'cs1-09':[[C('cs1-09_p0'),'Forward parachute']],
+  'cs1-12':[[C('cs1-12_p0'),'Arm protection'],[C('cs1-12_p1'),'Arm protection'],[C('cs1-12_p2'),'Arm protection']],
+  'cs1-13':[[C('cs1-13_p0'),'Feet in sitting'],[C('cs1-13_p1'),'Feet in standing']],
+  'cs2-08':[[C('cs2-08_p0'),'Hip adductors < 80°']],
+  'cs2-09':[[C('cs2-09_p0'),'Trunk “rocketing”']],
 };
 
 /* Module 1 – How to examine */
@@ -1114,15 +1199,6 @@ const DECK_HOW=[
   S('web-14','Tone: lower limb',['<strong>Hip adductors:</strong> supine, hips and knees extended; hold at the ankles and abduct gently and smoothly. Fast stretches for spastic catches are not part of the HINE.','<strong>Popliteal angle:</strong> flex the thighs onto the abdomen, hands around the knees with thumbs on the calves, then straighten the knees. Keep the bottom on the bed.','<strong>Ankle dorsiflexion:</strong> knee extended, flat hand on the sole, dorsiflex; note the R1 angle.']),
   S('web-15','Reflexes & reactions (1)',['<strong>Arm protection:</strong> steady the trunk over the pelvis (centre of the nappy) and bring the child to sit by rotating up through the side. Watch the arm on the weight-bearing side.','<strong>Vertical suspension:</strong> hands under the axillae, feet off the surface; tickle the feet to stimulate kicking.','<strong>Lateral tilt:</strong> hold vertically around the hips and tilt quickly towards horizontal, keeping the head above the hips. Watch the upward side: head, neck, trunk and limbs.']),
   S('web-16','Reflexes & reactions (2)',['<strong>Forward parachute:</strong> from vertical suspension, move the child quickly forwards towards the ground without the feet touching. Before 6 months corrected, score 0.','<strong>Tendon reflexes:</strong> biceps, knee and ankle. Flex the joint, put your thumb over the tendon and strike your thumb.']),
-];
-
-/* Module 2 – Scoring example slides */
-const EXCARDS=[
-  ['ex-03','Head','Posture · sitting'],['ex-04','Trunk','Posture · sitting'],['ex-05','Arms','Posture · at rest'],
-  ['ex-06','Hands','Posture'],['ex-07','Legs (sitting)','Posture · long sitting'],['ex-08','Legs (supine/standing)','Posture'],
-  ['ex-09','Feet','Posture · supine/standing'],['ex-10','Hip adductors','Tone'],['ex-11','Pull to sit','Tone'],
-  ['ex-12','Ventral suspension','Tone'],['ex-13','Arm protection','Reflexes & reactions'],['ex-14','Lateral tilting','Reflexes & reactions'],
-  ['cs2-09','Trunk “rocketing”','Pitfall · posture'],
 ];
 
 /* Module 3 – Interpreting */
@@ -1201,20 +1277,11 @@ const CASES=[
   ]},
 ];
 
-/* Module 5 – Photo quiz (photos cropped from the Scoring Examples slides) */
-const QZ=[
-  ['ex03_s3','po','headsi',3],['ex03_s1','po','headsi',1],['ex03_s0','po','headsi',0],
-  ['ex04_s3','po','trnksi',3],['ex04_s1','po','trnksi',1],['ex04_s0','po','trnksi',0],
-  ['ex05_s3','po','arms',3],['ex05_s1','po','arms',1,'Score the LEFT arm (circled)'],['ex05_s0','po','arms',0,'Score the RIGHT arm (circled)'],
-  ['ex06_s3','po','hands',3],['ex06_s0','po','hands',0,'Score the RIGHT hand (circled); the posture is persistent'],
-  ['ex07_s3','po','legs',3,'Legs in long sitting'],['ex07_s1','po','legs',1,'Legs in long sitting'],['ex07_s0','po','legs',0,'Legs in long sitting'],
-  ['ex08_s3','po','legs',3,'Legs in standing: score the LEFT leg'],['ex08_s1','po','legs',1,'Legs in standing'],['ex08_s0','po','legs',0,'Legs in standing'],
-  ['ex09_s3','po','feet',3,'Score the LEFT foot'],['ex09_s0','po','feet',0,'Score the circled / pictured foot; the posture is persistent'],
-  ['ex11_s3','to','pull',3],['ex11_s1','to','pull',1],['ex11_s0','to','pull',0],
-  ['ex12_s3','to','vent',3],['ex12_s2','to','vent',2],['ex12_s1','to','vent',1],['ex12_s0','to','vent',0],
-  ['ex13_s3','rf','armprot',3,'Watch the arm on the weight-bearing side'],['ex13_s2','rf','armprot',2,'Watch the arm on the weight-bearing side'],['ex13_s1','rf','armprot',1,'Watch the arm on the weight-bearing side'],['ex13_s0','rf','armprot',0,'Watch the arm on the weight-bearing side'],
-  ['ex14_s3','rf','lateral',3,'Red line = trunk curve on the upward side'],['ex14_s2','rf','lateral',2,'Red line = trunk curve on the upward side'],['ex14_s1','rf','lateral',1,'Red line = trunk curve on the upward side'],['ex14_s0','rf','lateral',0,'Red line = trunk curve on the upward side'],
-];
+/* Module 5 – Photo quiz: built from the example photos (drawings hidden, they give the answer away) */
+const QHINT={arms:{1:'Score the LEFT arm (circled)',0:'Score the RIGHT arm (circled)'},hands:{0:'Score the RIGHT hand (circled); the posture is persistent'},
+  legstand:{3:'Score the LEFT leg (circled)'},feet:{3:'Score the LEFT foot (circled)',0:'Score the circled foot; the posture is persistent'}};
+const QZ=[];
+EXP.forEach(e=>Object.entries(e.sc).forEach(([sc,v])=>{if(v.ph)QZ.push({e,score:+sc,ph:v.ph,hint:(QHINT[e.k]||{})[sc]||(e.k==='armprot'?'Watch the arm on the weight-bearing side':e.k==='lateral'?'Red line = trunk curve on the upward side':e.part?('Legs '+(e.part==='Sitting'?'in long sitting':'in supine/standing')):'')});}));
 const findItem=id=>{for(const k in SEC){const it=SEC[k].items.find(i=>i.id===id);if(it)return it;}return null;};
 
 /* Generic deck renderer */
@@ -1234,9 +1301,10 @@ function renderDeck(key){
   el.innerHTML=`
     <div class="deck-img-wrap ${locked?'locked':''}" onclick="${locked?'':`lbOpen([['${s.img}','${s.title.replace(/'/g,"\\'")}']],0)`}">
       <img src="${IMG+s.img}.webp" alt="${s.title}" loading="lazy">
-      ${locked?'<div class="deck-lock">Answer the checkpoint below to reveal this slide</div>':''}
+      ${locked?'<div class="deck-lock">Answer the checkpoint below to reveal this slide</div>':'<span class="zoom-badge">🔍 Tap to enlarge</span>'}
     </div>
     ${qhtml}
+    ${(!locked&&PH[s.img])?`<div class="ph-strip">${PH[s.img].map((p,j)=>`<figure onclick="lbOpen(PH['${s.img}'],${j})"><img src="${IMG+p[0]}.webp" alt="${p[1]}" loading="lazy"><figcaption>${p[1]}</figcaption></figure>`).join('')}</div>`:''}
     <div class="deck-title">${s.title}</div>
     ${locked?'':`<div class="deck-notes"><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul></div>`}
     <div class="deck-nav">
@@ -1260,16 +1328,46 @@ function buildCases(){
 }
 function pickCase(i){curCase=i;buildCases();}
 
-/* Example grid */
-function buildExGrid(){
-  document.getElementById('ex-grid').innerHTML=EXCARDS.map((c,i)=>`<div class="ex-card" onclick="lbOpen(EXCARDS.map(x=>[x[0],x[1]+' — '+x[2]]),${i})"><img src="${IMG+c[0]}.webp" alt="${c[1]}" loading="lazy"><div>${c[1]}<small>${c[2]}</small></div></div>`).join('');
+/* Example ladder (photos per score) */
+const descFor=(e,v)=>{const it=findItem(e.item);const g=it&&it.scoreGuide.find(x=>x.v===v);if(!g)return'';
+  if(!e.part)return g.d;const seg=g.d.split(' · ').find(x=>x.startsWith(e.part));return seg?(t=>t[0].toUpperCase()+t.slice(1))(seg.replace(/^[^:]+:\s*/,'')):'(Intermediate — not optimal, not clearly score 1)';};
+const imgSet=e=>{const set=[];[3,2,1,0].forEach(v=>{const x=e.sc[v];if(!x)return;if(x.dr)set.push([x.dr,`${e.lbl}: score ${v} (proforma drawing)`]);(x.ph||[]).forEach(p=>set.push([p,`${e.lbl}: score ${v}${x.note?' · '+x.note:''}`]));});
+  (e.extra||[]).forEach(x=>x.ph.forEach(p=>set.push([p,e.lbl+' · '+x.cap.replace(/<[^>]+>/g,'')])));return set;};
+function ladderHTML(k){
+  const e=EXP.find(x=>x.k===k),it=findItem(e.item),set=imgSet(e);
+  const idx=f=>set.findIndex(x=>x[0]===f);
+  const im=(f,cls)=>`<img class="${cls}" src="${IMG+f}.webp" alt="${e.lbl}" loading="lazy" onclick="lbOpen(EXSETS['${k}'],${idx(f)})">`;
+  (window.EXSETS=window.EXSETS||{})[k]=set;
+  let h='';
+  it.sc.forEach(v=>{
+    const x=e.sc[v];const d=descFor(e,v);
+    if(!x){ if(Object.keys(e.sc).length)h+=`<div class="lad lad-empty"><span class="sbadge s${v}">${v}</span><span class="lad-d">${d}<i> · no example image</i></span></div>`;return;}
+    h+=`<div class="lad s${v}"><div class="lad-h"><span class="sbadge s${v}">Score ${v}</span><span class="lad-d">${d}${x.note?`<b class="lad-note">${x.note}</b>`:''}</span></div>
+      <div class="lad-imgs">${x.dr?im(x.dr,'lad-dr'):''}${(x.ph||[]).map(p=>im(p,'lad-ph')).join('')}</div></div>`;
+  });
+  (e.extra||[]).forEach(x=>{h+=`<div class="lad lad-case"><div class="lad-h"><span class="sbadge sc">Case</span><span class="lad-d">${x.cap}</span></div><div class="lad-imgs">${x.ph.map(p=>im(p,'lad-ph')).join('')}</div></div>`;});
+  if(e.slide)h+=`<button class="lad-slide" onclick="lbOpen([['${e.slide}','${e.lbl}: original teaching slide']],0)">View the original teaching slide</button>`;
+  return h;
 }
+let curEx='head';
+function buildExPicker(){
+  const grps=[...new Set(EXP.map(e=>e.grp))];
+  document.getElementById('ex-pick').innerHTML=grps.map(g=>`<div class="exp-grp"><span class="exp-gl">${g}</span>${EXP.filter(e=>e.grp===g).map(e=>`<button class="exp-chip ${e.k===curEx?'on':''}" onclick="curEx='${e.k}';buildExPicker()">${e.lbl}</button>`).join('')}</div>`).join('');
+  document.getElementById('ex-ladder').innerHTML=`<div class="lad-title">${EXP.find(e=>e.k===curEx).lbl}</div>`+ladderHTML(curEx);
+}
+/* Bottom sheet used by the 📷 Examples button in Assessment mode */
+function openItemEx(id){
+  const ks=EXMAP[id];const sh=document.getElementById('sheet');
+  document.getElementById('sheet-body').innerHTML=ks.map(k=>`<div class="lad-title">${EXP.find(e=>e.k===k).lbl}</div>`+ladderHTML(k)).join('');
+  sh.classList.add('open');document.body.style.overflow='hidden';document.getElementById('sheet-body').scrollTop=0;
+}
+function sheetClose(){document.getElementById('sheet').classList.remove('open');document.body.style.overflow='';}
 
 /* Photo quiz */
 let qz={list:[],i:0,right:0,done:0,ans:null};
 function qzStart(){
   const f=document.getElementById('qz-filter').value;
-  qz.list=QZ.filter(q=>f==='all'||q[1]===f).map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  qz.list=QZ.filter(q=>f==='all'||secOf(q.e.item)===f).map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
   Object.assign(qz,{i:0,right:0,done:0,ans:null});renderQz();
 }
 function renderQz(){
@@ -1279,33 +1377,52 @@ function renderQz(){
     const pct=qz.done?Math.round(qz.right/qz.done*100):0;
     el.innerHTML=`<div class="risk-card ${pct>=80?'risk-green':pct>=60?'risk-amber':'risk-red'}"><div class="rk-band">Quiz complete</div><div class="rk-title">${qz.right} of ${qz.done} correct (${pct}%)</div><div class="rk-desc">Review the Scoring examples tab for the items you missed, then restart. Questions are shuffled each time.</div></div>`;return;
   }
-  const [img,sec,id,ans,hint]=qz.list[qz.i];const it=findItem(id);
-  const opts=it.scoreGuide.filter(g=>it.sc.includes(g.v));
+  const q=qz.list[qz.i],e=q.e,it=findItem(e.item),ans=q.score;
+  window.QZ_SET=q.ph.map(p=>[p,e.lbl]);
   el.innerHTML=`
-    <div class="quiz-photo" onclick="lbOpen([['q/${img}','${it.lbl.replace(/'/g,"\\'")}']],0)"><img src="${IMG}q/${img}.webp" alt="Quiz photo"></div>
-    <div class="quiz-item">${qz.i+1}/${qz.list.length} · ${it.lbl}</div>
-    <div class="quiz-hint">${hint||it.sub}</div>
-    <div class="quiz-opts">${opts.map(g=>{
-      let c='qopt';if(qz.ans!==null){if(g.v===ans)c+=' right';else if(g.v===qz.ans)c+=' wrong';}
-      return `<button class="${c}" ${qz.ans!==null?'disabled':''} onclick="qzAns(${g.v})"><b>Score ${g.v}</b> ${g.d}</button>`;}).join('')}</div>
-    ${qz.ans!==null?`<div class="qbox" style="margin-top:12px"><div class="qt">${qz.ans===ans?'✓ Correct':'✗ The answer is score '+ans}</div><div style="font-size:12px;line-height:1.6">${it.scoreGuide.find(g=>g.v===ans).d}</div><button class="abtn primary" style="margin-top:10px;width:100%" onclick="qz.i++;qz.ans=null;renderQz()">Next photo →</button></div>`:''}`;
+    <div class="quiz-photos">${q.ph.map((p,i)=>`<img src="${IMG+p}.webp" alt="Quiz photo" onclick="lbOpen(QZ_SET,${i})">`).join('')}</div>
+    <div class="quiz-item">${qz.i+1}/${qz.list.length} · ${e.lbl}</div>
+    <div class="quiz-hint">${q.hint||it.sub}</div>
+    <div class="quiz-opts">${it.sc.map(v=>{
+      let c='qopt';if(qz.ans!==null){if(v===ans)c+=' right';else if(v===qz.ans)c+=' wrong';}
+      return `<button class="${c}" ${qz.ans!==null?'disabled':''} onclick="qzAns(${v})"><b>Score ${v}</b> ${descFor(e,v)}</button>`;}).join('')}</div>
+    ${qz.ans!==null?`<div class="qbox" style="margin-top:12px"><div class="qt">${qz.ans===ans?'✓ Correct':'✗ The answer is score '+ans}</div><div style="font-size:12px;line-height:1.6">${descFor(e,ans)}</div>${e.sc[ans]&&e.sc[ans].dr?`<img src="${IMG+e.sc[ans].dr}.webp" alt="" style="max-height:90px;background:#fff;border-radius:6px;margin-top:8px;padding:4px">`:''}<button class="abtn primary" style="margin-top:10px;width:100%" onclick="qz.i++;qz.ans=null;renderQz()">Next photo →</button></div>`:''}`;
 }
-function qzAns(v){const ans=qz.list[qz.i][3];qz.ans=v;qz.done++;if(v===ans)qz.right++;renderQz();}
+const secOf=id=>Object.keys(SEC).find(k=>SEC[k].items.some(i=>i.id===id));
+function qzAns(v){const ans=qz.list[qz.i].score;qz.ans=v;qz.done++;if(v===ans)qz.right++;renderQz();}
 
-/* Lightbox */
-let lb={set:[],i:0};
+/* Lightbox with pinch / double-tap / wheel zoom and swipe */
+let lb={set:[],i:0};const Z={s:1,x:0,y:0};const ptrs=new Map();let pinch0=null,lastTap=0,swipe0=null;
+function zApply(){document.getElementById('lb-img').style.transform=`translate(${Z.x}px,${Z.y}px) scale(${Z.s})`;}
+function zReset(){Z.s=1;Z.x=0;Z.y=0;zApply();}
+function zTo(ns,cx,cy){ns=Math.max(1,Math.min(5,ns));Z.x=cx-(cx-Z.x)*(ns/Z.s);Z.y=cy-(cy-Z.y)*(ns/Z.s);Z.s=ns;if(ns===1){Z.x=0;Z.y=0;}zApply();}
+function stageXY(ev){const r=document.getElementById('lb-stage').getBoundingClientRect();return[ev.clientX-r.left-r.width/2,ev.clientY-r.top-r.height/2];}
 function lbOpen(set,i){lb={set,i};lbShow();document.getElementById('lb').classList.add('open');document.body.style.overflow='hidden';}
 function lbShow(){
-  const [img,cap]=lb.set[lb.i];
-  document.getElementById('lb-wrap').classList.remove('zoom');
-  document.getElementById('lb-img').src=IMG+img+'.webp';
+  const [img,cap]=lb.set[lb.i];zReset();
+  const el=document.getElementById('lb-img');el.src=IMG+img+'.webp';
+  el.onload=()=>{document.getElementById('lb-rot').hidden=!(el.naturalWidth/el.naturalHeight>1.3&&window.innerHeight>window.innerWidth);};
   document.getElementById('lb-cap').textContent=cap+(lb.set.length>1?`  (${lb.i+1}/${lb.set.length})`:'');
   document.getElementById('lb-prev').disabled=lb.i===0;
   document.getElementById('lb-next').disabled=lb.i===lb.set.length-1;
 }
-function lbStep(d){lb.i=Math.max(0,Math.min(lb.set.length-1,lb.i+d));lbShow();}
-function lbClose(){document.getElementById('lb').classList.remove('open');document.body.style.overflow='';}
-function openItemEx(id){lbOpen(EXMAP[id],0);}
+function lbStep(d){const n=lb.i+d;if(n<0||n>=lb.set.length)return;lb.i=n;lbShow();}
+function lbClose(){document.getElementById('lb').classList.remove('open');if(!document.getElementById('sheet').classList.contains('open'))document.body.style.overflow='';}
+(function(){
+  const st=document.getElementById('lb-stage');
+  st.addEventListener('pointerdown',ev=>{st.setPointerCapture(ev.pointerId);ptrs.set(ev.pointerId,stageXY(ev));
+    if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a[0]-b[0],a[1]-b[1]),s:Z.s};}
+    if(ptrs.size===1){const now=Date.now();const [x,y]=stageXY(ev);
+      if(now-lastTap<300){zTo(Z.s>1?1:2.5,x,y);lastTap=0;}else lastTap=now;swipe0={x,y,zx:Z.x,zy:Z.y};}});
+  st.addEventListener('pointermove',ev=>{if(!ptrs.has(ev.pointerId))return;const p=stageXY(ev);ptrs.set(ev.pointerId,p);
+    if(ptrs.size===2&&pinch0){const [a,b]=[...ptrs.values()];const d=Math.hypot(a[0]-b[0],a[1]-b[1]);zTo(pinch0.s*d/pinch0.d,(a[0]+b[0])/2,(a[1]+b[1])/2);}
+    else if(ptrs.size===1&&swipe0&&Z.s>1){Z.x=swipe0.zx+(p[0]-swipe0.x);Z.y=swipe0.zy+(p[1]-swipe0.y);zApply();}});
+  const up=ev=>{const p=ptrs.get(ev.pointerId);ptrs.delete(ev.pointerId);if(ptrs.size<2)pinch0=null;
+    if(p&&swipe0&&Z.s===1&&ptrs.size===0){const dx=p[0]-swipe0.x,dy=p[1]-swipe0.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)lbStep(dx<0?1:-1);}
+    if(ptrs.size===0)swipe0=null;};
+  st.addEventListener('pointerup',up);st.addEventListener('pointercancel',up);
+  st.addEventListener('wheel',ev=>{ev.preventDefault();const [x,y]=stageXY(ev);zTo(Z.s*(ev.deltaY<0?1.2:1/1.2),x,y);},{passive:false});
+})();
 
 /* Mode + training tab switching */
 let trInit=false;
@@ -1314,7 +1431,7 @@ function setMode(m){
   document.getElementById('mode-train').classList.toggle('vis',m==='train');
   document.getElementById('mb-assess').classList.toggle('on',m==='assess');
   document.getElementById('mb-train').classList.toggle('on',m==='train');
-  if(m==='train'&&!trInit){trInit=true;mkDeck('how','deck-how',DECK_HOW);mkDeck('int','deck-int',DECK_INT);buildExGrid();buildCases();qzStart();}
+  if(m==='train'&&!trInit){trInit=true;mkDeck('how','deck-how',DECK_HOW);mkDeck('int','deck-int',DECK_INT);buildExPicker();buildCases();qzStart();}
 }
 function trSw(pill,tid){
   document.querySelectorAll('#tr-pills .npill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');

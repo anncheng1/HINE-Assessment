@@ -16,7 +16,7 @@ Built for the Department of Paediatrics & Neonatology, Hospital Miri.
 ## Features
 - **Assessment:** all 26 items with examiner guidance and 📷 photo examples. Asymmetric items are scored **R and L separately and averaged** (e.g. 2 + 1 = 1.5), as in the case studies.
 - **Summary:** global score /78, age-specific interpretation with preterm correction (Scoring Aid), and an asymmetry count with the poorer side and upper-limb involvement. **≥ 4 asymmetries prompts referral** to early intervention.
-- **Training:** how to examine, scoring examples, interpreting scores, three interactive case studies, and a 34-photo scoring quiz.
+- **Training:** how to examine, scoring examples, interpreting scores, three interactive case studies, and a 34-photo scoring quiz. Scoring examples show real infant photos and proforma drawings for each score, with pinch-zoom on phones.
 - Print / save as PDF and copy the report text.
 
 ## Updating
